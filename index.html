@@ -13,22 +13,13 @@
     --bakery:#f59e0b; --fashion:#ec4899; --media:#06b6d4; --marketing:#10b981;
   }
   body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-  body::before {
-    content:''; position:fixed; inset:0;
-    background-image:linear-gradient(rgba(124,58,237,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.05) 1px,transparent 1px);
-    background-size:32px 32px; pointer-events:none; z-index:0;
-  }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(124,58,237,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(124,58,237,0.05) 1px,transparent 1px); background-size:32px 32px; pointer-events:none; z-index:0; }
 
   header { position:relative; z-index:1; text-align:center; padding:24px 20px 10px; }
   .eyebrow { font-size:10px; letter-spacing:4px; color:var(--accent2); text-transform:uppercase; margin-bottom:5px; }
   h1 { font-size:clamp(22px,5vw,40px); font-weight:900; background:linear-gradient(135deg,#fff 30%,var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 
-  /* stamp bar */
-  .stamp-bar {
-    position:relative; z-index:1; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
-    margin:12px auto; padding:10px 20px; background:var(--card);
-    border:1px solid rgba(124,58,237,0.25); border-radius:50px; width:fit-content; max-width:92vw;
-  }
+  .stamp-bar { position:relative; z-index:1; display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; margin:12px auto; padding:10px 20px; background:var(--card); border:1px solid rgba(124,58,237,0.25); border-radius:50px; width:fit-content; max-width:92vw; }
   .stamp-item { display:flex; flex-direction:column; align-items:center; gap:2px; font-size:9px; color:var(--muted); transition:color .3s; }
   .stamp-icon { width:30px; height:30px; border-radius:50%; border:2px dashed var(--muted); display:flex; align-items:center; justify-content:center; font-size:15px; filter:grayscale(1); transition:all .4s; }
   .stamp-item.collected .stamp-icon { border-color:var(--accent2); filter:none; box-shadow:0 0 10px rgba(6,182,212,.5); }
@@ -37,63 +28,62 @@
   .stamp-total { font-size:12px; color:var(--muted); white-space:nowrap; }
   .stamp-total span { color:var(--accent2); font-weight:700; }
 
-  /* tabs */
   .tab-wrap { position:relative; z-index:1; display:flex; justify-content:center; gap:5px; margin:12px auto 0; padding:0 12px; flex-wrap:wrap; }
-  .tab { padding:7px 16px; border-radius:50px; border:1px solid rgba(255,255,255,.08); font-family:'Noto Sans KR',sans-serif; font-size:12px; font-weight:700; cursor:pointer; background:var(--card); color:var(--muted); transition:all .2s; }
+  .tab { padding:7px 14px; border-radius:50px; border:1px solid rgba(255,255,255,.08); font-family:'Noto Sans KR',sans-serif; font-size:11px; font-weight:700; cursor:pointer; background:var(--card); color:var(--muted); transition:all .2s; }
   .tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
 
-  /* map area */
-  .map-wrap { position:relative; z-index:1; max-width:860px; margin:16px auto 40px; padding:0 12px; }
+  .map-wrap { position:relative; z-index:1; max-width:900px; margin:16px auto 40px; padding:0 12px; }
   .floor-panel { display:none; }
   .floor-panel.active { display:block; }
 
-  /* building SVG floor */
-  .floor-svg-wrap { position:relative; width:100%; }
-  .floor-svg-wrap svg { width:100%; height:auto; display:block; }
+  /* building card */
+  .building-card { background:#12122a; border-radius:16px; padding:16px; position:relative; }
+  .building-label { font-size:10px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
 
-  /* room base styles in SVG handled inline */
+  /* room grid */
+  .room-row { display:flex; gap:6px; margin-bottom:6px; align-items:stretch; }
+  .room { border-radius:8px; padding:8px 10px; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.03); font-size:10px; color:var(--muted); display:flex; flex-direction:column; gap:2px; position:relative; flex:1; min-height:48px; }
+  .room.wide { flex:2; }
+  .room.wider { flex:3; }
+  .room.narrow { flex:0.6; }
+  .room-name { font-size:10px; color:#666; line-height:1.3; }
 
-  /* NPC pulse marker */
-  .npc-marker {
-    position:absolute; transform:translate(-50%,-50%);
-    cursor:pointer; z-index:10; transition:transform .15s;
-  }
-  .npc-marker:hover { transform:translate(-50%,-50%) scale(1.15); }
-  .npc-pulse {
-    width:44px; height:44px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:20px; position:relative; box-shadow:0 4px 16px rgba(0,0,0,.4);
-    border:2px solid rgba(255,255,255,.2);
-  }
-  .npc-pulse::before {
-    content:''; position:absolute; inset:-6px; border-radius:50%;
-    border:2px solid; opacity:.5; animation:pulse 2s ease-in-out infinite;
-  }
-  .npc-label {
-    position:absolute; bottom:-22px; left:50%; transform:translateX(-50%);
-    white-space:nowrap; font-size:10px; font-weight:700; padding:2px 7px;
-    border-radius:10px; background:rgba(0,0,0,.7); color:#fff;
-  }
-  .npc-marker.collected .npc-pulse::after {
-    content:'✔'; position:absolute; top:-4px; right:-4px;
-    background:#06b6d4; color:#000; width:16px; height:16px;
-    border-radius:50%; font-size:9px; font-weight:900;
-    display:flex; align-items:center; justify-content:center;
-  }
+  /* NPC room */
+  .room.npc-room { cursor:pointer; transition:transform .15s, box-shadow .15s; }
+  .room.npc-room:hover { transform:translateY(-2px); }
+  .room.bakery-r  { --rc:var(--bakery);  border-color:color-mix(in srgb,var(--bakery) 50%,transparent);  background:color-mix(in srgb,var(--bakery) 10%,var(--bg)); }
+  .room.fashion-r { --rc:var(--fashion); border-color:color-mix(in srgb,var(--fashion) 50%,transparent); background:color-mix(in srgb,var(--fashion) 10%,var(--bg)); }
+  .room.media-r   { --rc:var(--media);   border-color:color-mix(in srgb,var(--media) 50%,transparent);   background:color-mix(in srgb,var(--media) 10%,var(--bg)); }
+  .room.marketing-r { --rc:var(--marketing); border-color:color-mix(in srgb,var(--marketing) 50%,transparent); background:color-mix(in srgb,var(--marketing) 10%,var(--bg)); }
+  .room.npc-room:hover { box-shadow:0 4px 20px color-mix(in srgb,var(--rc) 30%,transparent); border-color:var(--rc); }
+  .room.visited { background:color-mix(in srgb,var(--rc) 20%,var(--bg)) !important; }
 
-  @keyframes pulse {
-    0%,100% { transform:scale(1); opacity:.5; }
-    50% { transform:scale(1.35); opacity:.1; }
-  }
+  .npc-tag { font-size:9px; font-weight:700; margin-top:3px; }
+  .bakery-r  .npc-tag { color:var(--bakery); }
+  .fashion-r .npc-tag { color:var(--fashion); }
+  .media-r   .npc-tag { color:var(--media); }
+  .marketing-r .npc-tag { color:var(--marketing); }
+
+  .npc-badge { position:absolute; top:5px; right:5px; font-size:8px; padding:1px 5px; border-radius:8px; background:rgba(255,255,255,.08); color:var(--muted); }
+  .visited .npc-badge { background:var(--rc); color:#000; font-weight:700; }
+
+  .pulse-dot { display:inline-block; width:6px; height:6px; border-radius:50%; margin-right:3px; animation:pdot 1.5s ease-in-out infinite; }
+  .bakery-r .pulse-dot  { background:var(--bakery); }
+  .fashion-r .pulse-dot { background:var(--fashion); }
+  .media-r .pulse-dot   { background:var(--media); }
+  .marketing-r .pulse-dot { background:var(--marketing); }
+  @keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(1.4)} }
+
+  .corridor { background:rgba(255,255,255,.02); border:1px dashed rgba(255,255,255,.05); border-radius:6px; padding:4px 10px; font-size:9px; color:#2a2a4a; text-align:center; margin-bottom:6px; }
+
+  /* section divider */
+  .section-title { font-size:10px; color:var(--muted); margin:10px 0 6px; letter-spacing:1px; display:flex; align-items:center; gap:6px; }
+  .section-title::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.06); }
 
   /* legend */
-  .legend {
-    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
-    margin:0 0 10px; padding:0 12px;
-    position:relative; z-index:1;
-  }
-  .legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); }
-  .legend-dot { width:10px; height:10px; border-radius:50%; }
+  .legend { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:0 0 8px; padding:0 12px; position:relative; z-index:1; }
+  .legend-item { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--muted); }
+  .legend-dot { width:8px; height:8px; border-radius:50%; }
 
   /* modal */
   .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.82); backdrop-filter:blur(10px); z-index:100; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .3s; }
@@ -103,21 +93,32 @@
   .modal-bar { height:3px; border-radius:3px; margin-bottom:20px; }
   .modal-emoji { font-size:44px; margin-bottom:8px; }
   .modal-npc-label { font-size:10px; letter-spacing:3px; color:var(--muted); text-transform:uppercase; margin-bottom:3px; }
-  .modal-npc-name { font-size:19px; font-weight:900; color:#fff; margin-bottom:6px; }
+  .modal-npc-name { font-size:19px; font-weight:900; color:#fff; margin-bottom:5px; }
   .modal-location { font-size:11px; color:var(--muted); margin-bottom:12px; }
   .modal-dialog { background:rgba(255,255,255,.05); border-radius:10px; padding:13px; font-size:13px; line-height:1.7; color:var(--text); margin-bottom:14px; border-left:3px solid; }
   .modal-mission-label { font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:5px; }
   .modal-mission { font-size:14px; font-weight:700; color:#fff; margin-bottom:18px; }
-  .modal-btn { width:100%; padding:12px; border-radius:10px; border:none; font-size:14px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR',sans-serif; transition:opacity .2s; }
-  .modal-btn:hover { opacity:.85; }
   .modal-close { position:absolute; top:13px; right:13px; background:rgba(255,255,255,.08); border:none; color:var(--muted); width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:13px; display:flex; align-items:center; justify-content:center; }
   .modal-close:hover { background:rgba(255,255,255,.15); color:#fff; }
 
-  /* toast */
+  #pw-input { -moz-appearance:textfield; }
+  #pw-input::-webkit-outer-spin-button, #pw-input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+
   .stamp-toast { position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px); padding:12px 24px; border-radius:50px; font-weight:700; font-size:13px; z-index:300; transition:transform .5s cubic-bezier(.34,1.56,.64,1); white-space:nowrap; box-shadow:0 6px 24px rgba(0,0,0,.4); }
   .stamp-toast.show { transform:translateX(-50%) translateY(0); }
   .complete-banner { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(120px); background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; padding:13px 26px; border-radius:50px; font-weight:700; font-size:14px; z-index:200; transition:transform .5s cubic-bezier(.34,1.56,.64,1); white-space:nowrap; box-shadow:0 8px 28px rgba(124,58,237,.5); }
   .complete-banner.show { transform:translateX(-50%) translateY(0); }
+
+  .hunt-stamp .stamp-icon { animation: huntpulse 2s ease-in-out infinite; }
+  @keyframes huntpulse { 0%,100%{box-shadow:0 0 0 0 rgba(168,85,247,.4)} 50%{box-shadow:0 0 0 8px rgba(168,85,247,0)} }
+  .hunt-modal .modal-bar { background:linear-gradient(135deg,#a855f7,#ec4899) !important; }
+  .upload-area { border:2px dashed rgba(168,85,247,.4); border-radius:12px; padding:24px; text-align:center; cursor:pointer; transition:all .2s; background:rgba(168,85,247,.05); }
+  .upload-area:hover { border-color:#a855f7; background:rgba(168,85,247,.1); }
+  .upload-area input { display:none; }
+  .preview-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:10px; }
+  .preview-img { width:100%; aspect-ratio:1; object-fit:cover; border-radius:8px; border:1px solid rgba(168,85,247,.3); }
+  .photo-count { font-size:11px; color:#a855f7; font-weight:700; margin-top:6px; text-align:center; }
+
 </style>
 </head>
 <body>
@@ -128,10 +129,15 @@
 </header>
 
 <div class="stamp-bar">
+  <div class="stamp-item" id="s-marketing"><div class="stamp-icon">📊</div><div>마케팅</div></div>
   <div class="stamp-item" id="s-bakery"><div class="stamp-icon">🍞</div><div>베이커리</div></div>
   <div class="stamp-item" id="s-fashion"><div class="stamp-icon">👗</div><div>패션</div></div>
   <div class="stamp-item" id="s-media"><div class="stamp-icon">💻</div><div>미디어</div></div>
-  <div class="stamp-item" id="s-marketing"><div class="stamp-icon">📊</div><div>마케팅</div></div>
+  <div class="divider"></div>
+  <div class="stamp-item hunt-stamp" id="s-hunt" onclick="openHuntModal()" style="cursor:pointer;">
+    <div class="stamp-icon" style="border-color:#a855f7;border-style:solid;font-size:13px">📸</div>
+    <div style="color:#a855f7;font-size:9px;font-weight:700">사냥</div>
+  </div>
   <div class="divider"></div>
   <div class="stamp-total">스탬프 <span id="count">0</span>/4</div>
 </div>
@@ -144,351 +150,128 @@
 </div>
 
 <div class="tab-wrap">
-  <button class="tab" onclick="showFloor(5,this)">5층</button>
-  <button class="tab" onclick="showFloor(4,this)">4층</button>
-  <button class="tab" onclick="showFloor(3,this)">3층</button>
-  <button class="tab" onclick="showFloor(2,this)">2층</button>
-  <button class="tab active" onclick="showFloor(1,this)">1층</button>
+  <button class="tab active" onclick="showFloor('main5',this)">본관 5층</button>
+  <button class="tab" onclick="showFloor('annex4',this)">별관 4층</button>
+  <button class="tab" onclick="showFloor('annex3',this)">별관 3층</button>
+  <button class="tab" onclick="showFloor('annex2',this)">별관 2층</button>
+  <button class="tab" onclick="showFloor('cafe',this)">베이커리관 2층</button>
 </div>
 
 <div class="map-wrap">
 
-  <!-- 5층 -->
-  <div class="floor-panel" id="floor-5">
-    <div class="floor-svg-wrap">
-      <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg">
-        <!-- background -->
-        <rect width="800" height="220" fill="#12122a" rx="16"/>
-        <text x="16" y="28" font-family="Noto Sans KR,sans-serif" font-size="13" fill="#444" font-weight="700">5층</text>
-
-        <!-- rooms left wing -->
-        <rect x="20" y="40" width="80" height="50" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="60" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-11</text>
-
-        <rect x="108" y="40" width="80" height="50" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="148" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-10</text>
-
-        <rect x="196" y="40" width="80" height="50" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="236" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-9</text>
-
-        <rect x="284" y="40" width="80" height="50" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="324" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-8</text>
-
-        <rect x="372" y="40" width="80" height="50" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="412" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-7</text>
-
-        <!-- right wing rooms -->
-        <rect x="470" y="40" width="80" height="50" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="510" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-6</text>
-
-        <rect x="558" y="40" width="90" height="50" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="603" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-5</text>
-
-        <!-- special rooms top right -->
-        <rect x="470" y="100" width="80" height="40" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="510" y="125" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">미술실</text>
-
-        <rect x="558" y="100" width="60" height="40" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="588" y="125" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">준비실</text>
-
-        <rect x="626" y="100" width="60" height="40" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="656" y="120" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">여교사</text>
-        <text x="656" y="132" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">휴게실</text>
-
-        <rect x="694" y="40" width="86" height="100" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="737" y="90" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">음악실</text>
-
-        <rect x="694" y="148" width="86" height="50" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="737" y="178" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">기술실</text>
-
-        <!-- 1학년 교무실 highlight -->
-        <rect x="626" y="40" width="60" height="52" rx="6" fill="#252545" stroke="#f59e0b" stroke-width="1.5"/>
-        <text x="656" y="62" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#f59e0b">1학년</text>
-        <text x="656" y="74" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#f59e0b">교무실</text>
-
-        <!-- corridor line -->
-        <line x1="20" y1="100" x2="780" y2="100" stroke="#2a2a50" stroke-width="1" stroke-dasharray="4,4"/>
-
-        <!-- floor label -->
-        <text x="400" y="200" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="11" fill="#333">— NPC 없음 (1학년 교실 구역) —</text>
-      </svg>
-    </div>
-  </div>
-
-  <!-- 4층 -->
-  <div class="floor-panel" id="floor-4">
-    <div class="floor-svg-wrap" style="position:relative">
-      <svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg">
-        <rect width="800" height="240" fill="#12122a" rx="16"/>
-        <text x="16" y="28" font-family="Noto Sans KR,sans-serif" font-size="13" fill="#444" font-weight="700">4층</text>
-
-        <!-- left classrooms -->
-        <rect x="20" y="160" width="72" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="56" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-4</text>
-
-        <rect x="100" y="160" width="72" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="136" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-3</text>
-
-        <rect x="180" y="160" width="72" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="216" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-2</text>
-
-        <rect x="260" y="160" width="72" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="296" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">1-1</text>
-
-        <!-- 2학년 교무실 -->
-        <rect x="340" y="160" width="80" height="52" rx="6" fill="#252545" stroke="#ec4899" stroke-width="1.5"/>
-        <text x="380" y="183" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#ec4899">2학년</text>
-        <text x="380" y="197" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#ec4899">교무실</text>
-
-        <!-- right classrooms -->
-        <rect x="428" y="160" width="72" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="464" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">2-10</text>
-
-        <rect x="508" y="160" width="72" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="544" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">2-9</text>
-
-        <rect x="588" y="160" width="72" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="624" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">2-8</text>
-
-        <rect x="668" y="160" width="60" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="698" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">2-7</text>
-
-        <rect x="736" y="160" width="44" height="52" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="758" y="190" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#555">2-6</text>
-
-        <!-- top area: 특별실 -->
-        <rect x="428" y="40" width="72" height="50" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="464" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">특별실</text>
-
-        <!-- 진로진학 상담실 — 패션 NPC 위치 -->
-        <rect x="508" y="40" width="90" height="50" rx="6" fill="#2a1535" stroke="#ec4899" stroke-width="2"/>
-        <text x="553" y="61" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#ec4899" font-weight="700">진로진학</text>
-        <text x="553" y="73" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#ec4899" font-weight="700">상담실</text>
-
-        <rect x="606" y="40" width="72" height="50" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="642" y="65" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">우등반스</text>
-        <text x="642" y="77" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">상담실</text>
-
-        <rect x="686" y="40" width="50" height="50" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="711" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">준비실</text>
-
-        <rect x="744" y="40" width="36" height="120" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="762" y="100" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">가정실</text>
-
-        <!-- corridor -->
-        <rect x="20" y="100" width="720" height="52" rx="4" fill="#0e0e22" stroke="#1e1e3a" stroke-width="1"/>
-        <text x="380" y="130" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#2a2a4a">복도</text>
-      </svg>
-
-      <!-- NPC: 패션 (진로진학 상담실 → 4층) -->
-      <div class="npc-marker" id="npc-fashion" style="left:69%;top:28%" onclick="openModal('fashion')">
-        <div class="npc-pulse" style="background:#2d0a28;border-color:#ec4899;--pc:#ec4899">👗
-          <style>.npc-marker#npc-fashion .npc-pulse::before{border-color:#ec4899}</style>
+  <!-- 본관 5층 ★ 마케팅 NPC -->
+  <div class="floor-panel active" id="floor-main5">
+    <div class="building-card">
+      <div class="building-label">🏢 본관 5층</div>
+      <div class="room-row">
+        <div class="room marketing-r npc-room wider" id="room-marketing" onclick="openModal('marketing')">
+          <div class="npc-badge" id="badge-marketing">NPC</div>
+          <div class="room-name" style="color:#10b981;font-weight:700">🔵 Blue Lounge</div>
+          <div class="npc-tag"><span class="pulse-dot"></span>마케터 지호</div>
         </div>
-        <div class="npc-label" style="background:#ec4899;color:#000">디자이너 수빈</div>
+      </div>
+      <div class="corridor">복도</div>
+      <div class="room-row">
+        <div class="room narrow"><div class="room-name">1-7</div></div>
+        <div class="room narrow"><div class="room-name">1-6</div></div>
+        <div class="room narrow"><div class="room-name">1-5</div></div>
+        <div class="room narrow"><div class="room-name">1-4</div></div>
+        <div class="room narrow"><div class="room-name">1-3</div></div>
+        <div class="room narrow"><div class="room-name">1-2</div></div>
+        <div class="room narrow"><div class="room-name">1-1</div></div>
+        <div class="room narrow"><div class="room-name">3-1</div></div>
       </div>
     </div>
   </div>
 
-  <!-- 3층 -->
-  <div class="floor-panel" id="floor-3">
-    <div class="floor-svg-wrap" style="position:relative">
-      <svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg">
-        <rect width="800" height="240" fill="#12122a" rx="16"/>
-        <text x="16" y="28" font-family="Noto Sans KR,sans-serif" font-size="13" fill="#444" font-weight="700">3층</text>
-
-        <!-- left large area: 체육관 지붕/옥상 -->
-        <rect x="20" y="40" width="300" height="100" rx="6" fill="#0e1420" stroke="#1e2840" stroke-width="1"/>
-        <text x="170" y="95" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="11" fill="#2a3a50">체육관 지붕 / 옥상</text>
-
-        <!-- corridor -->
-        <rect x="20" y="148" width="720" height="48" rx="4" fill="#0e0e22" stroke="#1e1e3a" stroke-width="1"/>
-        <text x="380" y="176" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#2a2a4a">복도</text>
-
-        <!-- right special rooms top -->
-        <rect x="330" y="40" width="72" height="50" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="366" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">특별실</text>
-
-        <!-- 과학실2 → 마케팅 NPC -->
-        <rect x="410" y="40" width="90" height="50" rx="6" fill="#0d2018" stroke="#10b981" stroke-width="2"/>
-        <text x="455" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#10b981" font-weight="700">과학실2</text>
-        <text x="455" y="82" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#10b981">(마케팅 실습)</text>
-
-        <rect x="508" y="40" width="60" height="50" rx="6" fill="#252545" stroke="#3a3a60" stroke-width="1"/>
-        <text x="538" y="65" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#888">교무실3</text>
-
-        <rect x="576" y="40" width="72" height="50" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="612" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">2-5</text>
-
-        <rect x="656" y="40" width="64" height="50" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="688" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">2-4</text>
-
-        <rect x="728" y="40" width="52" height="160" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="754" y="120" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">계단/EV</text>
-
-        <!-- bottom classrooms -->
-        <rect x="20" y="204" width="72" height="30" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="56" y="222" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">2-3</text>
-        <rect x="100" y="204" width="72" height="30" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="136" y="222" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">2-2</text>
-        <rect x="180" y="204" width="72" height="30" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="216" y="222" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">2-1</text>
-        <rect x="260" y="204" width="72" height="30" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="296" y="222" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">3-11</text>
-        <rect x="410" y="204" width="72" height="30" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="446" y="222" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">3-10</text>
-        <rect x="490" y="204" width="72" height="30" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="526" y="222" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">3-9</text>
-        <rect x="570" y="204" width="72" height="30" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="606" y="222" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">3-8</text>
-        <rect x="650" y="204" width="70" height="30" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="685" y="222" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">3-7</text>
-      </svg>
-
-      <!-- NPC: 마케팅 (과학실2) -->
-      <div class="npc-marker" id="npc-marketing" style="left:57%;top:30%" onclick="openModal('marketing')">
-        <div class="npc-pulse" style="background:#0a1f15;border-color:#10b981">📊
-          <style>.npc-marker#npc-marketing .npc-pulse::before{border-color:#10b981}</style>
+  <!-- 별관 4층 -->
+  <div class="floor-panel" id="floor-annex4">
+    <div class="building-card">
+      <div class="building-label">🏛 별관 4층 (특별실)</div>
+      <div class="room-row">
+        <div class="room"><div class="room-name">Wee 클래스</div></div>
+        <div class="room" style="border-color:#f59e0b;background:rgba(245,158,11,.08);cursor:default">
+          <div style="font-size:9px;color:#f59e0b;font-weight:700;margin-bottom:3px">⭐ 특별 이벤트</div>
+          <div class="room-name" style="color:#f59e0b;font-weight:700">포레스트룸</div>
         </div>
-        <div class="npc-label" style="background:#10b981;color:#000">마케터 지호</div>
+        <div class="room wider" style="border-color:#f59e0b;background:rgba(245,158,11,.08);cursor:default">
+          <div style="font-size:9px;color:#f59e0b;font-weight:700;margin-bottom:3px">⭐ 특별 이벤트</div>
+          <div class="room-name" style="color:#f59e0b;font-weight:700">Green Lounge</div>
+        </div>
+        <div class="room"><div class="room-name">진로지도부 교무실</div></div>
+        <div class="room"><div class="room-name">면접지도실</div></div>
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:#333;text-align:center">— NPC 없음 —</div>
+    </div>
+  </div>
+
+  <!-- 별관 3층 ★ 미디어 NPC -->
+  <div class="floor-panel" id="floor-annex3">
+    <div class="building-card">
+      <div class="building-label">🏛 별관 3층</div>
+      <div class="room-row">
+        <div class="room"><div class="room-name">디지털Lab</div></div>
+        <div class="room"><div class="room-name">미디어 스튜디오</div></div>
+        <div class="room"><div class="room-name">클라우드 실습실</div></div>
+        <div class="room"><div class="room-name">응용프로그래밍 개발 2실</div></div>
+        <div class="room"><div class="room-name">전자상거래실</div></div>
+      </div>
+      <div class="room-row">
+        <div class="room"><div class="room-name">사무행정1실</div></div>
+        <div class="room"><div class="room-name">패션산업디자인과 교무실</div></div>
+        <div class="room"><div class="room-name">세미나실</div></div>
+        <div class="room media-r npc-room wider" id="room-media" onclick="openModal('media')">
+          <div class="npc-badge" id="badge-media">NPC</div>
+          <div class="room-name" style="color:#06b6d4;font-weight:700">인공지능 실습실</div>
+          <div class="npc-tag"><span class="pulse-dot"></span>개발자 현우</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 2층 -->
-  <div class="floor-panel" id="floor-2">
-    <div class="floor-svg-wrap" style="position:relative">
-      <svg viewBox="0 0 800 260" xmlns="http://www.w3.org/2000/svg">
-        <rect width="800" height="260" fill="#12122a" rx="16"/>
-        <text x="16" y="28" font-family="Noto Sans KR,sans-serif" font-size="13" fill="#444" font-weight="700">2층</text>
-
-        <!-- 체육관 large -->
-        <rect x="20" y="40" width="300" height="120" rx="6" fill="#0e1420" stroke="#1e2840" stroke-width="1"/>
-        <text x="170" y="105" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="13" fill="#2a3a50">체 육 관</text>
-
-        <!-- 다목적실 → 미디어 NPC -->
-        <rect x="500" y="40" width="100" height="55" rx="6" fill="#081620" stroke="#06b6d4" stroke-width="2"/>
-        <text x="550" y="63" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#06b6d4" font-weight="700">다목적실</text>
-        <text x="550" y="76" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#06b6d4">(미디어 실습)</text>
-
-        <rect x="330" y="40" width="80" height="55" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="370" y="65" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">남교사</text>
-        <text x="370" y="77" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">휴게실</text>
-
-        <rect x="418" y="40" width="74" height="55" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="455" y="70" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">교직원탈의</text>
-
-        <rect x="608" y="40" width="56" height="55" rx="6" fill="#252545" stroke="#3a3a60" stroke-width="1"/>
-        <text x="636" y="65" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#888">교무실2</text>
-
-        <rect x="672" y="40" width="108" height="120" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="726" y="103" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">과학실1</text>
-
-        <!-- corridor -->
-        <rect x="20" y="170" width="644" height="44" rx="4" fill="#0e0e22" stroke="#1e1e3a" stroke-width="1"/>
-        <text x="342" y="196" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#2a2a4a">복도</text>
-
-        <!-- bottom rooms -->
-        <rect x="20" y="220" width="90" height="34" rx="6" fill="#252545" stroke="#3a3a60" stroke-width="1"/>
-        <text x="65" y="241" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#888">교무실1</text>
-
-        <rect x="118" y="220" width="72" height="34" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="154" y="241" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">전산실</text>
-
-        <rect x="198" y="220" width="72" height="34" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="234" y="241" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">방송실</text>
-
-        <rect x="278" y="220" width="80" height="34" rx="6" fill="#252545" stroke="#f59e0b" stroke-width="1.5"/>
-        <text x="318" y="236" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#f59e0b">3학년</text>
-        <text x="318" y="248" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#f59e0b">교무실</text>
-
-        <rect x="366" y="220" width="80" height="34" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="406" y="241" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">3-5</text>
-
-        <rect x="454" y="220" width="90" height="34" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="499" y="241" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">평가관리실</text>
-
-        <rect x="552" y="220" width="60" height="34" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="582" y="241" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">3-4</text>
-
-        <rect x="620" y="220" width="52" height="34" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="646" y="241" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">3-3</text>
-      </svg>
-
-      <!-- NPC: 미디어 (다목적실) -->
-      <div class="npc-marker" id="npc-media" style="left:69%;top:28%" onclick="openModal('media')">
-        <div class="npc-pulse" style="background:#061520;border-color:#06b6d4">💻
-          <style>.npc-marker#npc-media .npc-pulse::before{border-color:#06b6d4}</style>
+  <!-- 별관 2층 ★ 패션 NPC -->
+  <div class="floor-panel" id="floor-annex2">
+    <div class="building-card">
+      <div class="building-label">🏛 별관 2층</div>
+      <div class="room-row">
+        <div class="room"><div class="room-name">패션 스튜디오</div></div>
+        <div class="room fashion-r npc-room wider" id="room-fashion" onclick="openModal('fashion')">
+          <div class="npc-badge" id="badge-fashion">NPC</div>
+          <div class="room-name" style="color:#ec4899;font-weight:700">패션 VMD실</div>
+          <div class="npc-tag"><span class="pulse-dot"></span>디자이너 수빈</div>
         </div>
-        <div class="npc-label" style="background:#06b6d4;color:#000">개발자 현우</div>
+        <div class="room"><div class="room-name">서양의복 구성생산실</div></div>
       </div>
+      <div class="room-row">
+        <div class="room"><div class="room-name">컴퓨터 그래픽실</div></div>
+        <div class="room"><div class="room-name">도서관</div></div>
+        <div class="room"><div class="room-name">자기주도 학습실 (스터디카페)</div></div>
+        <div class="room"><div class="room-name">패턴메이킹실</div></div>
+      </div>
+      <div class="corridor">복도</div>
     </div>
   </div>
 
-  <!-- 1층 -->
-  <div class="floor-panel active" id="floor-1">
-    <div class="floor-svg-wrap" style="position:relative">
-      <svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg">
-        <rect width="800" height="280" fill="#12122a" rx="16"/>
-        <text x="16" y="28" font-family="Noto Sans KR,sans-serif" font-size="13" fill="#444" font-weight="700">1층</text>
-
-        <!-- 식생활 교육관 / 조리실 → 베이커리 NPC -->
-        <rect x="20" y="40" width="320" height="100" rx="6" fill="#1a1000" stroke="#f59e0b" stroke-width="2"/>
-        <text x="180" y="83" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="11" fill="#f59e0b" font-weight="700">식생활 교육관</text>
-        <text x="180" y="100" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#f59e0b">(베이커리카페과 실습)</text>
-
-        <!-- 시청각실 -->
-        <rect x="430" y="40" width="160" height="100" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="510" y="95" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="11" fill="#666">시청각실</text>
-
-        <!-- 기계실/전기실 -->
-        <rect x="598" y="40" width="72" height="46" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="634" y="68" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">전기실</text>
-        <rect x="598" y="94" width="72" height="46" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="634" y="122" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#666">기계실</text>
-
-        <rect x="678" y="40" width="102" height="160" rx="6" fill="#1e2040" stroke="#3a3a60" stroke-width="1"/>
-        <text x="729" y="125" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#666">도서실</text>
-
-        <!-- corridor -->
-        <rect x="20" y="148" width="650" height="44" rx="4" fill="#0e0e22" stroke="#1e1e3a" stroke-width="1"/>
-        <text x="345" y="174" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="10" fill="#2a2a4a">복도</text>
-
-        <!-- bottom rooms -->
-        <rect x="20" y="200" width="72" height="60" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="56" y="234" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">보건실</text>
-
-        <rect x="100" y="200" width="60" height="60" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="130" y="234" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">특수반</text>
-
-        <rect x="168" y="200" width="72" height="60" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="204" y="234" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">학운위실</text>
-
-        <rect x="248" y="200" width="80" height="60" rx="6" fill="#252545" stroke="#7c3aed" stroke-width="1.5"/>
-        <text x="288" y="234" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#a78bfa">교장실</text>
-
-        <rect x="336" y="200" width="80" height="60" rx="6" fill="#252545" stroke="#7c3aed" stroke-width="1.5"/>
-        <text x="376" y="234" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#a78bfa">행정실</text>
-
-        <!-- 컴퓨터실 → 안내 데스크 -->
-        <rect x="430" y="200" width="140" height="60" rx="6" fill="#1a2535" stroke="#06b6d4" stroke-width="1.5"/>
-        <text x="500" y="228" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#06b6d4">컴퓨터실</text>
-        <text x="500" y="243" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="8" fill="#06b6d4">🎁 스탬프 완성 → 여기로!</text>
-
-        <rect x="578" y="200" width="60" height="60" rx="6" fill="#1a1a35" stroke="#2a2a50" stroke-width="1"/>
-        <text x="608" y="234" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#555">준비실</text>
-
-        <!-- 현관 -->
-        <rect x="300" y="264" width="200" height="14" rx="4" fill="#7c3aed" opacity=".3"/>
-        <text x="400" y="274" text-anchor="middle" font-family="Noto Sans KR,sans-serif" font-size="9" fill="#a78bfa">현 관</text>
-      </svg>
-
-      <!-- NPC: 베이커리 (식생활 교육관) -->
-      <div class="npc-marker" id="npc-bakery" style="left:22%;top:37%" onclick="openModal('bakery')">
-        <div class="npc-pulse" style="background:#1a0e00;border-color:#f59e0b">🍞
-          <style>.npc-marker#npc-bakery .npc-pulse::before{border-color:#f59e0b}</style>
+  <!-- 베이커리카페관 2층 ★ 베이커리 NPC -->
+  <div class="floor-panel" id="floor-cafe">
+    <div class="building-card">
+      <div class="building-label">☕ 베이커리카페관 2층</div>
+      <div class="room-row">
+        <div class="room"><div class="room-name">바리스타 실습 1실</div></div>
+        <div class="room bakery-r npc-room wider" id="room-bakery" onclick="openModal('bakery')">
+          <div class="npc-badge" id="badge-bakery">NPC</div>
+          <div class="room-name" style="color:#f59e0b;font-weight:700">카페 쁘티아티장</div>
+          <div class="npc-tag"><span class="pulse-dot"></span>카페사장 민지</div>
         </div>
-        <div class="npc-label" style="background:#f59e0b;color:#000">카페사장 민지</div>
+        <div class="room"><div class="room-name">매점</div></div>
+        <div class="room"><div class="room-name">베이커리카페과 교무실</div></div>
+      </div>
+      <div class="corridor">복도</div>
+      <div class="section-title">1층</div>
+      <div class="room-row">
+        <div class="room"><div class="room-name">바리스타 실습 2실</div></div>
+        <div class="room"><div class="room-name">제빵실습 1실</div></div>
+        <div class="room"><div class="room-name">제과실습실</div></div>
       </div>
     </div>
   </div>
@@ -508,61 +291,81 @@
     <div class="modal-mission-label">🎯 미션</div>
     <div class="modal-mission" id="modal-mission"></div>
 
-    <!-- already collected -->
-    <div id="pw-done" style="display:none; text-align:center; padding:12px; background:#1a2a1a; border-radius:10px; color:#10b981; font-weight:700; font-size:14px;">
-      ✔ 스탬프를 이미 받았어요!
-    </div>
-
-    <!-- password input -->
+    <div id="pw-done" style="display:none;text-align:center;padding:12px;background:#1a2a1a;border-radius:10px;color:#10b981;font-weight:700;font-size:14px;">✔ 스탬프를 이미 받았어요!</div>
     <div id="pw-area">
       <div style="font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">🔑 NPC 비밀번호 입력</div>
       <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <input id="pw-input" type="number" maxlength="4" placeholder="- - - -"
+        <input id="pw-input" type="number" placeholder="- - - -"
           style="flex:1;padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#fff;font-size:20px;font-weight:700;letter-spacing:6px;text-align:center;font-family:'Noto Sans KR',sans-serif;outline:none;"
-          oninput="this.value=this.value.slice(0,4); clearPwError()"
-          onkeydown="if(event.key==='Enter') submitPw()"
+          oninput="this.value=this.value.slice(0,4);clearPwError()"
+          onkeydown="if(event.key==='Enter')submitPw()"
         />
-        <button onclick="submitPw()" id="pw-btn"
-          style="padding:11px 18px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:#000;">
-          확인
-        </button>
+        <button onclick="submitPw()" id="pw-btn" style="padding:11px 18px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:#000;">확인</button>
       </div>
       <div id="pw-error" style="display:none;font-size:12px;color:#ef4444;text-align:center;margin-top:2px;">❌ 비밀번호가 틀렸어요. NPC에게 다시 물어보세요!</div>
     </div>
   </div>
 </div>
 
+<!-- Hunt Modal -->
+<div class="modal-overlay" id="hunt-overlay" onclick="closeHuntModal(event)">
+  <div class="modal hunt-modal">
+    <button class="modal-close" onclick="document.getElementById('hunt-overlay').classList.remove('open')">✕</button>
+    <div class="modal-bar" style="background:linear-gradient(135deg,#a855f7,#ec4899)"></div>
+    <div class="modal-emoji">📸</div>
+    <div class="modal-npc-label">BONUS EVENT</div>
+    <div class="modal-npc-name" style="background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent">🦖 티라노사우루스 사냥</div>
+    <div class="modal-dialog" style="border-color:#a855f7;margin-bottom:16px">
+      지금 근명고 어딘가를 돌아다니고 있는 <strong style="color:#a855f7">티라노사우루스</strong>를 찾아라! 🦕<br><br>
+      티라노사우루스를 발견하면 함께 사진을 찍고 여기에 올려주세요. 사진을 선생님께 보여주면 특별 상품이 기다리고 있어요 🎁
+    </div>
+    <div class="modal-mission-label">📷 티라노와 함께 찍은 사진 올리기</div>
+    <div class="upload-area" onclick="document.getElementById('hunt-input').click()">
+      <input type="file" id="hunt-input" accept="image/*" multiple onchange="handlePhotos(event)">
+      <div style="font-size:28px;margin-bottom:6px">📂</div>
+      <div style="font-size:13px;color:#a855f7;font-weight:700">사진을 선택하거나 여기를 탭하세요</div>
+      <div style="font-size:11px;color:#64748b;margin-top:4px">여러 장 선택 가능</div>
+    </div>
+    <div class="preview-grid" id="preview-grid"></div>
+    <div class="photo-count" id="photo-count" style="display:none"></div>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(168,85,247,.08);border-radius:10px;font-size:11px;color:#a855f7;line-height:1.6;">
+      🦖 티라노사우루스는 지금 이 순간에도 근명고 어딘가를 돌아다니고 있습니다. 눈을 크게 뜨고 찾아보세요!
+    </div>
+  </div>
+</div>
+
 <div class="stamp-toast" id="toast"></div>
-<div class="complete-banner" id="complete-banner">🎉 스탬프 완성! 1층 컴퓨터실로 달려가세요!</div>
+<div class="complete-banner" id="complete-banner">🎉 스탬프 완성! 선생님께 확인받으세요!</div>
 
 <script>
 const zones = {
-  bakery:    { emoji:'🍞', name:'카페사장 민지', dept:'베이커리카페과', color:'#f59e0b', floor:1, location:'📍 1층 식생활 교육관', dialog:'"저 중학교 때 그냥 카페 알바나 할까 생각했거든요. 근데 여기 와서 레시피 개발하고 원가 계산 배우니까... 졸업하고 바로 카페 브랜드 취업했어요 😄"', mission:'음료 한 잔 직접 만들어보기', password:'1111' },
-  fashion:   { emoji:'👗', name:'디자이너 수빈', dept:'패션산업디자인과', color:'#ec4899', floor:4, location:'📍 4층 진로진학 상담실', dialog:'"나이키 매장 취업했을 때 중학교 친구들이 제일 놀랐어요. 걔네 아직 대학 다니는데 저는 이미 2년차 직원이거든요. 이 옷 제가 직접 만든 거예요!"', mission:'선배 작품 비하인드 스토리 듣기', password:'1111' },
-  media:     { emoji:'💻', name:'개발자 현우', dept:'미디어소프트웨어과', color:'#06b6d4', floor:2, location:'📍 2층 다목적실', dialog:'"병역특례로 IT 회사 다니고 있어요. 정보처리산업기사 스펙 넣었더니 면접관이 엄청 신기해했어요. 영상 편집 10분만 같이 해볼래요?"', mission:'영상 편집 or 코딩 10분 체험', password:'1111' },
-  marketing: { emoji:'📊', name:'마케터 지호', dept:'마케팅경영과', color:'#10b981', floor:3, location:'📍 3층 과학실2', dialog:'"공기업 합격했을 때 담임 선생님한테 제일 먼저 전화했어요. 저 연봉 맞혀보실래요? 맞히면 취업 꿀팁 다 드림 😂"', mission:'선배 연봉 맞히기 도전 (힌트 3개)', password:'1111' }
+  bakery:    { emoji:'🍞', name:'카페사장 민지', dept:'베이커리카페과', color:'#f59e0b', floor:'cafe',    location:'📍 베이커리카페관 2층 · 카페 쁘티아티장', dialog:'"저 중학교 때 그냥 카페 알바나 할까 생각했거든요. 근데 여기 와서 레시피 개발하고 원가 계산 배우니까... 졸업하고 바로 카페 브랜드 취업했어요 😄"', mission:'음료 한 잔 직접 만들어보기', password:'1111' },
+  fashion:   { emoji:'👗', name:'디자이너 수빈', dept:'패션산업디자인과', color:'#ec4899', floor:'annex2', location:'📍 별관 2층 · 패션 VMD실', dialog:'"나이키 매장 취업했을 때 중학교 친구들이 제일 놀랐어요. 걔네 아직 대학 다니는데 저는 이미 2년차 직원이거든요. 이 옷 제가 직접 만든 거예요!"', mission:'선배 작품 비하인드 스토리 듣기', password:'1111' },
+  media:     { emoji:'💻', name:'개발자 현우', dept:'미디어소프트웨어과', color:'#06b6d4', floor:'annex3', location:'📍 별관 3층 · 인공지능 실습실', dialog:'"병역특례로 IT 회사 다니고 있어요. 정보처리산업기사 스펙 넣었더니 면접관이 엄청 신기해했어요. 영상 편집 10분만 같이 해볼래요?"', mission:'영상 편집 or 코딩 10분 체험', password:'1111' },
+  marketing: { emoji:'📊', name:'마케터 지호', dept:'마케팅경영과', color:'#10b981', floor:'main5',  location:'📍 본관 5층 · Blue Lounge', dialog:'"공기업 합격했을 때 담임 선생님한테 제일 먼저 전화했어요. 저 연봉 맞혀보실래요? 맞히면 취업 꿀팁 다 드림 😂"', mission:'선배 연봉 맞히기 도전 (힌트 3개)', password:'1111' }
 };
 
 const collected = new Set(JSON.parse(sessionStorage.getItem('stamps')||'[]'));
 let current = null;
+
+const floorTabMap = { main5:0, annex4:1, annex3:2, annex2:3, cafe:4 };
 
 function init() {
   collected.forEach(k => applyStamp(k, false));
   const params = new URLSearchParams(location.search);
   const stamp = params.get('stamp');
   if (stamp && zones[stamp] && !collected.has(stamp)) {
-    collectStamp(stamp);
-    history.replaceState({}, '', location.pathname);
+    collectStamp(stamp); history.replaceState({},  '', location.pathname);
   } else if (stamp && collected.has(stamp)) {
     showToast('⚡ 이미 받은 스탬프예요!', '#334155', '#94a3b8');
     history.replaceState({}, '', location.pathname);
   }
 }
 
-function showFloor(n, btn) {
+function showFloor(id, btn) {
   document.querySelectorAll('.floor-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('floor-' + n).classList.add('active');
+  document.getElementById('floor-' + id).classList.add('active');
   btn.classList.add('active');
 }
 
@@ -576,36 +379,30 @@ function openModal(key) {
   d.textContent = z.dialog; d.style.borderColor = z.color;
   document.getElementById('modal-mission').textContent = z.mission;
   document.getElementById('pw-btn').style.background = z.color;
-
   const done = collected.has(key);
   document.getElementById('pw-done').style.display = done ? 'block' : 'none';
   document.getElementById('pw-area').style.display = done ? 'none' : 'block';
   document.getElementById('pw-input').value = '';
   document.getElementById('pw-error').style.display = 'none';
-
   document.getElementById('modal-overlay').classList.add('open');
   if (!done) setTimeout(() => document.getElementById('pw-input').focus(), 300);
 }
 
 function closeModal(e) { if (e.target === document.getElementById('modal-overlay')) closeModalBtn(); }
 function closeModalBtn() { document.getElementById('modal-overlay').classList.remove('open'); }
-
 function clearPwError() { document.getElementById('pw-error').style.display = 'none'; }
 
 function submitPw() {
   if (!current || collected.has(current)) return;
   const val = document.getElementById('pw-input').value.trim();
-  const z = zones[current];
-  if (val === z.password) {
+  if (val === zones[current].password) {
     collectStamp(current);
     document.getElementById('pw-done').style.display = 'block';
     document.getElementById('pw-area').style.display = 'none';
   } else {
-    const err = document.getElementById('pw-error');
-    err.style.display = 'block';
+    document.getElementById('pw-error').style.display = 'block';
     const input = document.getElementById('pw-input');
-    input.style.borderColor = '#ef4444';
-    input.value = '';
+    input.style.borderColor = '#ef4444'; input.value = '';
     setTimeout(() => { input.style.borderColor = 'rgba(255,255,255,.15)'; }, 1000);
   }
 }
@@ -623,12 +420,11 @@ function applyStamp(key, animate) {
   const z = zones[key];
   document.getElementById('s-' + key).classList.add('collected');
   document.getElementById('count').textContent = collected.size;
-  const npc = document.getElementById('npc-' + key);
-  if (npc) npc.classList.add('collected');
+  document.getElementById('badge-' + key).textContent = '✔ 완료';
+  document.getElementById('room-' + key).classList.add('visited');
   if (animate) {
     const tabs = document.querySelectorAll('.tab');
-    const fm = {5:0,4:1,3:2,2:3,1:4};
-    showFloor(z.floor, tabs[fm[z.floor]]);
+    showFloor(z.floor, tabs[floorTabMap[z.floor]]);
     showToast(z.emoji + ' ' + z.dept + ' 스탬프 획득!', z.color, '#000');
   }
 }
@@ -638,6 +434,35 @@ function showToast(msg, bg, color) {
   t.textContent = msg; t.style.background = bg; t.style.color = color;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function openHuntModal() {
+  document.getElementById('hunt-overlay').classList.add('open');
+}
+function closeHuntModal(e) {
+  if (e.target === document.getElementById('hunt-overlay')) document.getElementById('hunt-overlay').classList.remove('open');
+}
+function handlePhotos(e) {
+  const files = Array.from(e.target.files);
+  const grid = document.getElementById('preview-grid');
+  const countEl = document.getElementById('photo-count');
+  grid.innerHTML = '';
+  files.forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = document.createElement('img');
+      img.src = ev.target.result;
+      img.className = 'preview-img';
+      grid.appendChild(img);
+    };
+    reader.readAsDataURL(f);
+  });
+  countEl.style.display = 'block';
+  countEl.textContent = `📸 ${files.length}장 선택됨 — 선생님께 보여주고 상품 받으세요!`;
+  // mark hunt stamp visually
+  const s = document.getElementById('s-hunt');
+  s.querySelector('.stamp-icon').textContent = '✅';
+  s.style.color = '#a855f7';
 }
 
 init();
