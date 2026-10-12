@@ -362,13 +362,31 @@ const zones = {
   marketing: { emoji:'📊', name:'마케터 지호', dept:'마케팅경영과', color:'#10b981', floor:'main5',  location:'📍 본관 5층 · Blue Lounge', dialog:'"공기업 합격했을 때 담임 선생님한테 제일 먼저 전화했어요. 저 연봉 맞혀보실래요? 맞히면 취업 꿀팁 다 드림 😂"', mission:'선배 연봉 맞히기 도전 (힌트 3개)', password:'1111' }
 };
 
-const collected = new Set(JSON.parse(sessionStorage.getItem('stamps')||'[]'));
+const STORE_KEY = 'gm_stamps_2026';
+function loadStamps() {
+  try {
+    const v = localStorage.getItem(STORE_KEY) || sessionStorage.getItem('stamps');
+    const arr = JSON.parse(v || '[]');
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+function saveStamps() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify([...collected])); } catch (e) {}
+  try { sessionStorage.setItem('stamps', JSON.stringify([...collected])); } catch (e) {}
+}
+function clearStamps() {
+  try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+  try { sessionStorage.removeItem('stamps'); } catch (e) {}
+}
+const collected = new Set(loadStamps().filter(k => zones[k]));
 let current = null;
 
 const floorTabMap = { main5:0, annex4:1, annex3:2, annex2:3, cafe:4 };
 
 function init() {
   collected.forEach(k => applyStamp(k, false));
+  if (collected.size === 4) document.getElementById('complete-banner').classList.add('show');
+  saveStamps();
   const params = new URLSearchParams(location.search);
   const stamp = params.get('stamp');
   if (stamp && zones[stamp] && !collected.has(stamp)) {
@@ -428,7 +446,7 @@ function collectStamp(key) {
   const k = key || current;
   if (!k || collected.has(k)) return;
   collected.add(k); current = k;
-  sessionStorage.setItem('stamps', JSON.stringify([...collected]));
+  saveStamps();
   applyStamp(k, true);
   if (collected.size === 4) setTimeout(() => document.getElementById('complete-banner').classList.add('show'), 800);
 }
@@ -456,7 +474,7 @@ function showToast(msg, bg, color) {
 function resetStamps() {
   const pw = prompt('초기화 비밀번호를 입력하세요');
   if (pw === '1234') {
-    sessionStorage.removeItem('stamps');
+    clearStamps();
     location.reload();
   } else if (pw !== null) {
     alert('비밀번호가 틀렸습니다.');
