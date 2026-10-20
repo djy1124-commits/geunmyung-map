@@ -204,7 +204,7 @@
   @keyframes blink2 { 50%{opacity:0} }
   .ticket-guide { font-size:13px; color:var(--text); line-height:1.7; }
   .ticket-claimed { display:none; margin-top:10px; padding:12px; border-radius:10px; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.5); color:#10b981; font-size:16px; font-weight:900; font-family:'Noto Sans KR',sans-serif; }
-  .claim-btn { margin-top:12px; width:100%; padding:9px; border-radius:10px; border:1px dashed var(--gold-soft); background:transparent; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Noto Sans KR',sans-serif; }
+  .claim-btn { margin-top:12px; width:100%; padding:12px; border-radius:10px; border:1px solid #10b981; background:rgba(16,185,129,.15); color:#10b981; font-size:15px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR',sans-serif; }
   .ticket.claimed .ticket-card { border-color:#10b981; }
   .complete-banner { cursor:pointer; }
 </style>
@@ -483,7 +483,7 @@
     </div>
     <div class="ticket-guide" id="t-guide">네 학과 선배 마법사를 모두 만났어요! 🎉<br>이 화면을 <strong style="color:var(--gold)">선생님께 보여주고 상품을 받아가세요!</strong></div>
     <div class="ticket-claimed" id="t-claimed">✔ 상품 수령 완료</div>
-    <button class="claim-btn" id="t-claim-btn" onclick="markClaimed()">선생님 확인 · 상품 지급 완료 처리</button>
+    <button class="claim-btn" id="t-claim-btn" onclick="markClaimed()">🎁 상품 수령 완료</button>
     <button onclick="closeTicket()" style="margin-top:14px;width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">📜 지도로 돌아가기</button>
   </div>
 </div>
@@ -620,11 +620,10 @@ function renderClaim() {
   document.getElementById('t-guide').style.display = c ? 'none' : 'block';
 }
 function markClaimed() {
-  const pw = prompt('선생님 확인 비밀번호를 입력하세요');
-  if (pw === null) return;
-  if (pw !== '1234') { alert('비밀번호가 틀렸습니다.'); return; }
+  if (player.claimedAt) return;
+  if (!confirm('상품을 받았나요?\n수령 완료로 처리하면 취소할 수 없어요.')) return;
   player.claimedAt = Date.now(); savePlayer(); renderClaim();
-  showToast('🎁 상품 지급 완료!', '#10b981', '#000');
+  showToast('🎁 상품 수령 완료!', '#10b981', '#000');
 }
 function closeTicket() {
   document.getElementById('ticket-overlay').classList.remove('open');
