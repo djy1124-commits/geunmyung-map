@@ -176,6 +176,34 @@
   .hw-owl .owl-eye { animation:blink 4.5s infinite; transform-box:fill-box; transform-origin:center; }
   @keyframes blink { 0%,92%,100%{transform:scaleY(1)} 95%{transform:scaleY(.1)} }
   @media (prefers-reduced-motion:reduce){ .hw-kid,.hw-kid .spark,.hw-owl .owl-eye{animation:none} }
+
+  /* ===== 마법사 등록 & 추첨 응모권 ===== */
+  .player-chip { position:relative; z-index:1; display:flex; align-items:center; justify-content:center; gap:8px; margin:6px auto 0; width:fit-content; max-width:92vw; padding:6px 14px; border-radius:999px; background:rgba(20,14,10,.55); border:1px solid var(--gold-soft); color:#fff3d1; font-size:13px; cursor:pointer; font-family:var(--serif); }
+  .player-chip .pc-school { color:var(--muted); font-size:12px; }
+  .player-chip .pc-edit { color:var(--gold); font-size:11px; border-left:1px solid var(--gold-faint); padding-left:8px; }
+  .player-chip.locked { cursor:default; }
+  .player-chip.locked .pc-edit { display:none; }
+  .reg-field { margin-bottom:12px; text-align:left; }
+  .reg-field label { display:block; font-size:12px; color:var(--gold); letter-spacing:1px; margin-bottom:5px; }
+  .reg-field input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--gold-soft); background:rgba(0,0,0,.3); color:#fff3d1; font-size:16px; outline:none; font-family:'Noto Sans KR',sans-serif; }
+  .reg-field input:focus { border-color:var(--gold); }
+  .reg-btn { width:100%; padding:13px; border-radius:10px; border:1px solid #fff3d1; background:linear-gradient(180deg,#f0d28e,#b5853f); color:#1a120a; font-size:15px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR',sans-serif; margin-top:4px; }
+  .reg-error { display:none; font-size:12px; color:#ef8a8a; margin:-4px 0 10px; text-align:left; }
+  .reg-note { font-size:11px; color:var(--muted); line-height:1.6; margin-top:12px; }
+  .ticket { text-align:center; }
+  .ticket-head { font-family:'Cinzel',serif; font-size:11px; letter-spacing:4px; color:var(--gold); margin-bottom:4px; }
+  .ticket-title { font-size:22px; font-weight:700; color:#fff3d1; margin-bottom:14px; }
+  .ticket-card { border:2px dashed var(--gold); border-radius:12px; padding:16px; background:rgba(0,0,0,.25); margin-bottom:12px; }
+  .ticket-name { font-size:30px; font-weight:700; color:#fff3d1; font-family:'Noto Sans KR',sans-serif; line-height:1.2; word-break:keep-all; }
+  .ticket-school { font-size:18px; color:var(--accent2); margin-top:4px; font-family:'Noto Sans KR',sans-serif; }
+  .ticket-stamps { font-size:24px; letter-spacing:6px; margin:12px 0 8px; }
+  .ticket-meta { font-size:12px; color:var(--muted); line-height:1.7; }
+  .ticket-code { font-family:'Noto Sans KR',monospace; font-size:16px; font-weight:900; color:var(--gold); letter-spacing:2px; }
+  .ticket-clock { font-family:'Noto Sans KR',sans-serif; font-size:13px; color:#10b981; margin-top:6px; }
+  .ticket-clock::before { content:'● '; animation:blink2 1s steps(2) infinite; }
+  @keyframes blink2 { 50%{opacity:0} }
+  .ticket-guide { font-size:13px; color:var(--text); line-height:1.7; }
+  .complete-banner { cursor:pointer; }
 </style>
 </head>
 <body>
@@ -202,6 +230,10 @@
   <div class="divider"></div>
   <div class="stamp-total">스탬프 <span id="count">0</span>/4</div>
 </div>
+
+<button class="player-chip" id="player-chip" onclick="openRegister(true)" style="display:none">
+  🪄 <span id="pc-name"></span><span class="pc-school" id="pc-school"></span><span class="pc-edit">수정</span>
+</button>
 
 <div class="legend">
   <div class="legend-item"><div class="legend-dot" style="background:var(--bakery);color:var(--bakery)"></div>베이커리카페과</div>
@@ -409,8 +441,50 @@
   </div>
 </div>
 
+<!-- 마법사 등록 -->
+<div class="modal-overlay" id="reg-overlay">
+  <div class="modal" style="text-align:center">
+    <button class="modal-close" id="reg-close" onclick="closeRegister()" style="display:none">✕</button>
+    <div class="modal-bar" style="background:linear-gradient(90deg,#b5853f,#f0d28e,#b5853f)"></div>
+    <div class="modal-emoji">🪄</div>
+    <div class="modal-npc-label">WIZARD REGISTRATION</div>
+    <div class="modal-npc-name">마법사 등록</div>
+    <div class="modal-location" style="margin-bottom:16px">탐험을 시작하기 전에 이름을 남겨주세요.<br>인장 4개를 모으면 이 이름으로 <strong style="color:var(--gold)">경품 추첨</strong>에 응모돼요!</div>
+    <div class="reg-field">
+      <label for="reg-name">이름</label>
+      <input id="reg-name" type="text" maxlength="10" placeholder="예: 김민지" autocomplete="off" oninput="clearRegError()">
+    </div>
+    <div class="reg-field">
+      <label for="reg-school">출신 중학교</label>
+      <input id="reg-school" type="text" maxlength="14" placeholder="예: 평촌중" autocomplete="off" oninput="clearRegError()" onkeydown="if(event.key==='Enter')submitRegister()">
+    </div>
+    <div class="reg-error" id="reg-error"></div>
+    <button class="reg-btn" onclick="submitRegister()">✦ 탐험 시작하기</button>
+    <div class="reg-note">추첨 당첨 확인에만 쓰이며, 이 정보는 내 휴대폰에만 저장돼요.<br>당첨되면 응모권 화면으로 본인 확인을 해요.</div>
+  </div>
+</div>
+
+<!-- 추첨 응모권 -->
+<div class="modal-overlay" id="ticket-overlay" onclick="if(event.target===this)closeTicket()">
+  <div class="modal ticket">
+    <button class="modal-close" onclick="closeTicket()">✕</button>
+    <div class="modal-bar" style="background:linear-gradient(90deg,#b5853f,#f0d28e,#b5853f)"></div>
+    <div class="ticket-head">✦ RAFFLE TICKET ✦</div>
+    <div class="ticket-title">🎃 추첨 응모권</div>
+    <div class="ticket-card">
+      <div class="ticket-name" id="t-name"></div>
+      <div class="ticket-school" id="t-school"></div>
+      <div class="ticket-stamps">📊🍞👗💻</div>
+      <div class="ticket-meta">응모번호 <span class="ticket-code" id="t-code"></span><br>완성 시각 <span id="t-done"></span></div>
+      <div class="ticket-clock" id="t-clock"></div>
+    </div>
+    <div class="ticket-guide">이 화면을 <strong style="color:var(--gold)">선생님께 보여주세요!</strong><br>명단에 등록되면 추첨에 참여할 수 있어요.</div>
+    <button onclick="closeTicket()" style="margin-top:14px;width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">📜 지도로 돌아가기</button>
+  </div>
+</div>
+
 <div class="stamp-toast" id="toast"></div>
-<div class="complete-banner" id="complete-banner">✨ 마법 인장 4개 완성! 선생님께 확인받으세요!</div>
+<div class="complete-banner" id="complete-banner" onclick="openTicket()">✨ 인장 4개 완성! 눌러서 응모권 보기 🎟️</div>
 
 <script>
 const zones = {
@@ -439,12 +513,111 @@ function clearStamps() {
 const collected = new Set(loadStamps().filter(k => zones[k]));
 let current = null;
 
+/* ----- 마법사(학생) 정보 ----- */
+const PLAYER_KEY = 'gm_player_2026';
+function loadPlayer() {
+  try {
+    const v = localStorage.getItem(PLAYER_KEY) || sessionStorage.getItem(PLAYER_KEY);
+    const p = JSON.parse(v || 'null');
+    return (p && p.name && p.school) ? p : null;
+  } catch (e) { return null; }
+}
+function savePlayer() {
+  const v = JSON.stringify(player);
+  try { localStorage.setItem(PLAYER_KEY, v); } catch (e) {}
+  try { sessionStorage.setItem(PLAYER_KEY, v); } catch (e) {}
+}
+let player = loadPlayer();
+
+function normSchool(s) {
+  s = s.replace(/\s+/g, '');
+  if (/중학교$/.test(s)) s = s.replace(/중학교$/, '중');
+  else if (!/중$/.test(s)) s = s + '중';
+  return s;
+}
+function renderPlayer() {
+  const chip = document.getElementById('player-chip');
+  if (!player) { chip.style.display = 'none'; return; }
+  document.getElementById('pc-name').textContent = player.name;
+  document.getElementById('pc-school').textContent = '· ' + player.school;
+  chip.style.display = 'flex';
+  chip.classList.toggle('locked', collected.size === 4);
+}
+function openRegister(editing) {
+  if (editing && collected.size === 4) { openTicket(); return; }
+  document.getElementById('reg-name').value = player ? player.name : '';
+  document.getElementById('reg-school').value = player ? player.school : '';
+  document.getElementById('reg-close').style.display = player ? 'flex' : 'none';
+  clearRegError();
+  document.getElementById('reg-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('reg-name').focus(), 300);
+}
+function closeRegister() {
+  if (!player) return;
+  document.getElementById('reg-overlay').classList.remove('open');
+}
+function clearRegError() { document.getElementById('reg-error').style.display = 'none'; }
+function regError(msg) { const e = document.getElementById('reg-error'); e.textContent = msg; e.style.display = 'block'; }
+function submitRegister() {
+  const name = document.getElementById('reg-name').value.replace(/\s+/g, '');
+  const schoolRaw = document.getElementById('reg-school').value.trim();
+  if (name.length < 2) return regError('이름을 2글자 이상 입력해주세요.');
+  if (!/^[가-힣a-zA-Z]+$/.test(name)) return regError('이름은 한글 또는 영문으로만 입력해주세요.');
+  if (schoolRaw.replace(/\s+/g, '').length < 2) return regError('출신 중학교를 입력해주세요. (예: 평촌중)');
+  const isNew = !player;
+  player = Object.assign({}, player || {}, { name, school: normSchool(schoolRaw) });
+  if (!player.createdAt) player.createdAt = Date.now();
+  savePlayer();
+  renderPlayer();
+  document.getElementById('reg-overlay').classList.remove('open');
+  showToast(isNew ? '🪄 ' + player.name + ' 마법사, 탐험을 시작하세요!' : '✦ 정보가 수정됐어요', '#2c2218', '#d4af6a');
+  if (collected.size === 4) setTimeout(openTicket, 600);
+}
+
+/* ----- 추첨 응모권 ----- */
+let clockTimer = null;
+function ticketCode(p) {
+  const s = p.name + '|' + p.school + '|' + p.completedAt;
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out = ''; h = h >>> 0;
+  for (let i = 0; i < 5; i++) { out += chars[h % 32]; h = Math.floor(h / 32); }
+  return 'GM-' + out;
+}
+function fmtTime(t) {
+  const d = new Date(t);
+  const pad = n => String(n).padStart(2, '0');
+  return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
+function openTicket() {
+  if (collected.size !== 4) return;
+  if (!player) { openRegister(false); return; }
+  if (!player.completedAt) { player.completedAt = Date.now(); savePlayer(); }
+  document.getElementById('t-name').textContent = player.name;
+  document.getElementById('t-school').textContent = player.school;
+  document.getElementById('t-code').textContent = ticketCode(player);
+  document.getElementById('t-done').textContent = fmtTime(player.completedAt);
+  const tick = () => {
+    const d = new Date(); const pad = n => String(n).padStart(2, '0');
+    document.getElementById('t-clock').textContent = '지금 ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  };
+  tick(); clearInterval(clockTimer); clockTimer = setInterval(tick, 1000);
+  document.getElementById('ticket-overlay').classList.add('open');
+}
+function closeTicket() {
+  document.getElementById('ticket-overlay').classList.remove('open');
+  clearInterval(clockTimer);
+}
+
 const floorTabMap = { main5:0, annex4:1, annex3:2, annex2:3, cafe:4 };
 
 function init() {
   collected.forEach(k => applyStamp(k, false));
   if (collected.size === 4) document.getElementById('complete-banner').classList.add('show');
   saveStamps();
+  renderPlayer();
+  if (!player) openRegister(false);
   const params = new URLSearchParams(location.search);
   const stamp = params.get('stamp');
   if (stamp && zones[stamp] && !collected.has(stamp)) {
@@ -506,7 +679,12 @@ function collectStamp(key) {
   collected.add(k); current = k;
   saveStamps();
   applyStamp(k, true);
-  if (collected.size === 4) setTimeout(() => document.getElementById('complete-banner').classList.add('show'), 800);
+  if (collected.size === 4) {
+    if (player && !player.completedAt) { player.completedAt = Date.now(); savePlayer(); }
+    renderPlayer();
+    setTimeout(() => document.getElementById('complete-banner').classList.add('show'), 800);
+    setTimeout(() => { closeModalBtn(); openTicket(); }, 1600);
+  }
 }
 
 function applyStamp(key, animate) {
@@ -533,6 +711,8 @@ function resetStamps() {
   const pw = prompt('초기화 비밀번호를 입력하세요');
   if (pw === '1234') {
     clearStamps();
+    try { localStorage.removeItem(PLAYER_KEY); } catch (e) {}
+    try { sessionStorage.removeItem(PLAYER_KEY); } catch (e) {}
     location.reload();
   } else if (pw !== null) {
     alert('비밀번호가 틀렸습니다.');
