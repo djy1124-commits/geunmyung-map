@@ -177,7 +177,7 @@
   @keyframes blink { 0%,92%,100%{transform:scaleY(1)} 95%{transform:scaleY(.1)} }
   @media (prefers-reduced-motion:reduce){ .hw-kid,.hw-kid .spark,.hw-owl .owl-eye{animation:none} }
 
-  /* ===== 마법사 등록 & 추첨 응모권 ===== */
+  /* ===== 마법사 등록 & 미션 완료 상품 ===== */
   .player-chip { position:relative; z-index:1; display:flex; align-items:center; justify-content:center; gap:8px; margin:6px auto 0; width:fit-content; max-width:92vw; padding:6px 14px; border-radius:999px; background:rgba(20,14,10,.55); border:1px solid var(--gold-soft); color:#fff3d1; font-size:13px; cursor:pointer; font-family:var(--serif); }
   .player-chip .pc-school { color:var(--muted); font-size:12px; }
   .player-chip .pc-edit { color:var(--gold); font-size:11px; border-left:1px solid var(--gold-faint); padding-left:8px; }
@@ -203,6 +203,9 @@
   .ticket-clock::before { content:'● '; animation:blink2 1s steps(2) infinite; }
   @keyframes blink2 { 50%{opacity:0} }
   .ticket-guide { font-size:13px; color:var(--text); line-height:1.7; }
+  .ticket-claimed { display:none; margin-top:10px; padding:12px; border-radius:10px; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.5); color:#10b981; font-size:16px; font-weight:900; font-family:'Noto Sans KR',sans-serif; }
+  .claim-btn { margin-top:12px; width:100%; padding:9px; border-radius:10px; border:1px dashed var(--gold-soft); background:transparent; color:var(--muted); font-size:12px; cursor:pointer; font-family:'Noto Sans KR',sans-serif; }
+  .ticket.claimed .ticket-card { border-color:#10b981; }
   .complete-banner { cursor:pointer; }
 </style>
 </head>
@@ -449,7 +452,7 @@
     <div class="modal-emoji">🪄</div>
     <div class="modal-npc-label">WIZARD REGISTRATION</div>
     <div class="modal-npc-name">마법사 등록</div>
-    <div class="modal-location" style="margin-bottom:16px">탐험을 시작하기 전에 이름을 남겨주세요.<br>인장 4개를 모으면 이 이름으로 <strong style="color:var(--gold)">경품 추첨</strong>에 응모돼요!</div>
+    <div class="modal-location" style="margin-bottom:16px">탐험을 시작하기 전에 이름을 남겨주세요.<br>마법 인장 4개를 모두 모으면 <strong style="color:var(--gold)">미션 완료 상품</strong>을 받을 수 있어요!</div>
     <div class="reg-field">
       <label for="reg-name">이름</label>
       <input id="reg-name" type="text" maxlength="10" placeholder="예: 김민지" autocomplete="off" oninput="clearRegError()">
@@ -460,31 +463,33 @@
     </div>
     <div class="reg-error" id="reg-error"></div>
     <button class="reg-btn" onclick="submitRegister()">✦ 탐험 시작하기</button>
-    <div class="reg-note">추첨 당첨 확인에만 쓰이며, 이 정보는 내 휴대폰에만 저장돼요.<br>당첨되면 응모권 화면으로 본인 확인을 해요.</div>
+    <div class="reg-note">상품 수령 확인에만 쓰이며, 이 정보는 내 휴대폰에만 저장돼요.</div>
   </div>
 </div>
 
-<!-- 추첨 응모권 -->
+<!-- 미션 완료 상품 -->
 <div class="modal-overlay" id="ticket-overlay" onclick="if(event.target===this)closeTicket()">
   <div class="modal ticket">
     <button class="modal-close" onclick="closeTicket()">✕</button>
     <div class="modal-bar" style="background:linear-gradient(90deg,#b5853f,#f0d28e,#b5853f)"></div>
-    <div class="ticket-head">✦ RAFFLE TICKET ✦</div>
-    <div class="ticket-title">🎃 추첨 응모권</div>
+    <div class="ticket-head">✦ MISSION COMPLETE ✦</div>
+    <div class="ticket-title">🎁 미션 완료! 상품 획득</div>
     <div class="ticket-card">
       <div class="ticket-name" id="t-name"></div>
       <div class="ticket-school" id="t-school"></div>
       <div class="ticket-stamps">📊🍞👗💻</div>
-      <div class="ticket-meta">응모번호 <span class="ticket-code" id="t-code"></span><br>완성 시각 <span id="t-done"></span></div>
+      <div class="ticket-meta">확인번호 <span class="ticket-code" id="t-code"></span><br>완성 시각 <span id="t-done"></span></div>
       <div class="ticket-clock" id="t-clock"></div>
     </div>
-    <div class="ticket-guide">이 화면을 <strong style="color:var(--gold)">선생님께 보여주세요!</strong><br>명단에 등록되면 추첨에 참여할 수 있어요.</div>
+    <div class="ticket-guide" id="t-guide">네 학과 선배 마법사를 모두 만났어요! 🎉<br>이 화면을 <strong style="color:var(--gold)">선생님께 보여주고 상품을 받아가세요!</strong></div>
+    <div class="ticket-claimed" id="t-claimed">✔ 상품 수령 완료</div>
+    <button class="claim-btn" id="t-claim-btn" onclick="markClaimed()">선생님 확인 · 상품 지급 완료 처리</button>
     <button onclick="closeTicket()" style="margin-top:14px;width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">📜 지도로 돌아가기</button>
   </div>
 </div>
 
 <div class="stamp-toast" id="toast"></div>
-<div class="complete-banner" id="complete-banner" onclick="openTicket()">✨ 인장 4개 완성! 눌러서 응모권 보기 🎟️</div>
+<div class="complete-banner" id="complete-banner" onclick="openTicket()">✨ 미션 완료! 눌러서 상품 받기 🎁</div>
 
 <script>
 const zones = {
@@ -574,7 +579,7 @@ function submitRegister() {
   if (collected.size === 4) setTimeout(openTicket, 600);
 }
 
-/* ----- 추첨 응모권 ----- */
+/* ----- 미션 완료 상품 ----- */
 let clockTimer = null;
 function ticketCode(p) {
   const s = p.name + '|' + p.school + '|' + p.completedAt;
@@ -603,7 +608,23 @@ function openTicket() {
     document.getElementById('t-clock').textContent = '지금 ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
   };
   tick(); clearInterval(clockTimer); clockTimer = setInterval(tick, 1000);
+  renderClaim();
   document.getElementById('ticket-overlay').classList.add('open');
+}
+function renderClaim() {
+  const c = !!(player && player.claimedAt);
+  document.querySelector('#ticket-overlay .ticket').classList.toggle('claimed', c);
+  document.getElementById('t-claimed').style.display = c ? 'block' : 'none';
+  document.getElementById('t-claimed').textContent = c ? '✔ 상품 수령 완료 · ' + fmtTime(player.claimedAt) : '';
+  document.getElementById('t-claim-btn').style.display = c ? 'none' : 'block';
+  document.getElementById('t-guide').style.display = c ? 'none' : 'block';
+}
+function markClaimed() {
+  const pw = prompt('선생님 확인 비밀번호를 입력하세요');
+  if (pw === null) return;
+  if (pw !== '1234') { alert('비밀번호가 틀렸습니다.'); return; }
+  player.claimedAt = Date.now(); savePlayer(); renderClaim();
+  showToast('🎁 상품 지급 완료!', '#10b981', '#000');
 }
 function closeTicket() {
   document.getElementById('ticket-overlay').classList.remove('open');
