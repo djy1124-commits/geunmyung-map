@@ -528,7 +528,7 @@ function loadPlayer() {
   } catch (e) { return null; }
 }
 /* ----- 구글 시트 연동 ----- */
-const SHEET_URL = ''; // Apps Script 웹 앱 URL (비어 있으면 전송 안 함)
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyKmG6x4EzepDlNOH41WKm78bZ5SVe_-cmAcEiTf6vAEi6qrQ00R88nXPAPa6iqQVz5Zw/exec'; // Apps Script 웹 앱 URL (비어 있으면 전송 안 함)
 const STAMP_NAMES = { marketing:'마케팅', bakery:'베이커리', fashion:'패션', media:'미디어' };
 function syncSheet(event) {
   if (!SHEET_URL || !player) return;
