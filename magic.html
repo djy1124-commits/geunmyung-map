@@ -82,6 +82,7 @@
   .room.npc-room:hover { transform:translateY(-2px); }
   .room.bakery-r  { --rc:var(--bakery); }
   .room.fashion-r { --rc:var(--fashion); }
+  .room.consult-r { --rc:#b48ce0; }
   .room.media-r   { --rc:var(--media); }
   .room.marketing-r { --rc:var(--marketing); }
   .room.npc-room { border-color:color-mix(in srgb,var(--rc) 55%,transparent); background:color-mix(in srgb,var(--rc) 12%,#1c150e); box-shadow:0 0 16px color-mix(in srgb,var(--rc) 18%,transparent); }
@@ -247,14 +248,30 @@
 </div>
 
 <div class="tab-wrap">
-  <button class="tab active" onclick="showFloor('main5',this)">본관 5층</button>
-  <button class="tab" onclick="showFloor('annex4',this)">별관 4층</button>
-  <button class="tab" onclick="showFloor('annex3',this)">별관 3층</button>
-  <button class="tab" onclick="showFloor('annex2',this)">별관 2층</button>
-  <button class="tab" onclick="showFloor('cafe',this)">베이커리관 2층</button>
+  <button class="tab" data-floor="annex6" onclick="showFloor('annex6',this)">별관 6층</button>
+  <button class="tab active" data-floor="main5" onclick="showFloor('main5',this)">본관 5층</button>
+  <button class="tab" data-floor="annex4" onclick="showFloor('annex4',this)">별관 4층</button>
+  <button class="tab" data-floor="annex3" onclick="showFloor('annex3',this)">별관 3층</button>
+  <button class="tab" data-floor="annex2" onclick="showFloor('annex2',this)">별관 2층</button>
+  <button class="tab" data-floor="cafe" onclick="showFloor('cafe',this)">베이커리관 2층</button>
+  <button class="tab" data-floor="outdoor" onclick="showFloor('outdoor',this)">🌿 야외 가온누리</button>
 </div>
 
 <div class="map-wrap">
+
+  <!-- 별관 6층 ★ 베이커리 NPC -->
+  <div class="floor-panel" id="floor-annex6">
+    <div class="building-card">
+      <div class="building-label">🏛 별관 6층</div>
+      <div class="room-row">
+        <div class="room bakery-r npc-room wider" id="room-bakery" onclick="openModal('bakery')">
+          <div class="npc-badge" id="badge-bakery">✦ 마법사</div>
+          <div class="room-name" style="font-weight:700">🟠 Orange Lounge</div>
+          <div class="npc-tag"><span class="pulse-dot"></span>카페사장 민지</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 본관 5층 ★ 마케팅 NPC -->
   <div class="floor-panel active" id="floor-main5">
@@ -281,7 +298,7 @@
     </div>
   </div>
 
-  <!-- 별관 4층 -->
+  <!-- 별관 4층 ★ 패션 NPC -->
   <div class="floor-panel" id="floor-annex4">
     <div class="building-card">
       <div class="building-label">🏛 별관 4층 (특별실)</div>
@@ -291,14 +308,14 @@
           <div style="font-size:9px;color:#f59e0b;font-weight:700;margin-bottom:3px">⭐ 특별 이벤트</div>
           <div class="room-name" style="color:#f59e0b;font-weight:700">포레스트룸</div>
         </div>
-        <div class="room wider" style="border-color:#f59e0b;background:rgba(245,158,11,.08);cursor:default">
-          <div style="font-size:9px;color:#f59e0b;font-weight:700;margin-bottom:3px">⭐ 특별 이벤트</div>
-          <div class="room-name" style="color:#f59e0b;font-weight:700">Green Lounge</div>
+        <div class="room fashion-r npc-room wider" id="room-fashion" onclick="openModal('fashion')">
+          <div class="npc-badge" id="badge-fashion">✦ 마법사</div>
+          <div class="room-name" style="font-weight:700">🟢 Green Lounge</div>
+          <div class="npc-tag"><span class="pulse-dot"></span>디자이너 수빈</div>
         </div>
         <div class="room"><div class="room-name">진로지도부 교무실</div></div>
         <div class="room"><div class="room-name">면접지도실</div></div>
       </div>
-      <div class="no-npc">— 이 층에는 마법사가 없어요 —</div>
     </div>
   </div>
 
@@ -326,17 +343,13 @@
     </div>
   </div>
 
-  <!-- 별관 2층 ★ 패션 NPC -->
+  <!-- 별관 2층 -->
   <div class="floor-panel" id="floor-annex2">
     <div class="building-card">
       <div class="building-label">🏛 별관 2층</div>
       <div class="room-row">
         <div class="room"><div class="room-name">패션 스튜디오</div></div>
-        <div class="room fashion-r npc-room wider" id="room-fashion" onclick="openModal('fashion')">
-          <div class="npc-badge" id="badge-fashion">✦ 마법사</div>
-          <div class="room-name" style="color:#ec4899;font-weight:700">패션 VMD실</div>
-          <div class="npc-tag"><span class="pulse-dot"></span>디자이너 수빈</div>
-        </div>
+        <div class="room"><div class="room-name">패션 VMD실</div></div>
         <div class="room"><div class="room-name">서양의복 구성생산실</div></div>
       </div>
       <div class="room-row">
@@ -346,20 +359,17 @@
         <div class="room"><div class="room-name">패턴메이킹실</div></div>
       </div>
       <div class="corridor">복도</div>
+      <div class="no-npc">— 이 층에는 마법사가 없어요 —</div>
     </div>
   </div>
 
-  <!-- 베이커리카페관 2층 ★ 베이커리 NPC -->
+  <!-- 베이커리카페관 2층 -->
   <div class="floor-panel" id="floor-cafe">
     <div class="building-card">
       <div class="building-label">☕ 베이커리카페관 2층</div>
       <div class="room-row">
         <div class="room"><div class="room-name">바리스타 실습 1실</div></div>
-        <div class="room bakery-r npc-room wider" id="room-bakery" onclick="openModal('bakery')">
-          <div class="npc-badge" id="badge-bakery">✦ 마법사</div>
-          <div class="room-name" style="color:#f59e0b;font-weight:700">카페 쁘티아티장</div>
-          <div class="npc-tag"><span class="pulse-dot"></span>카페사장 민지</div>
-        </div>
+        <div class="room wider"><div class="room-name">카페 쁘티아티장</div></div>
         <div class="room"><div class="room-name">매점</div></div>
         <div class="room"><div class="room-name">베이커리카페과 교무실</div></div>
       </div>
@@ -369,6 +379,21 @@
         <div class="room"><div class="room-name">바리스타 실습 2실</div></div>
         <div class="room"><div class="room-name">제빵실습 1실</div></div>
         <div class="room"><div class="room-name">제과실습실</div></div>
+      </div>
+      <div class="no-npc">— 이 층에는 마법사가 없어요 —</div>
+    </div>
+  </div>
+
+  <!-- 야외 가온누리 ★ 상담 -->
+  <div class="floor-panel" id="floor-outdoor">
+    <div class="building-card">
+      <div class="building-label">🌿 야외 잔디밭 무대 · 가온누리</div>
+      <div class="room-row">
+        <div class="room consult-r npc-room wider" id="room-consult" onclick="openModal('consult')">
+          <div class="npc-badge" id="badge-consult">✦ 상담</div>
+          <div class="room-name" style="font-weight:700">💬 가온누리 학과 부스</div>
+          <div class="npc-tag"><span class="pulse-dot"></span>1순위 희망학과 선생님</div>
+        </div>
       </div>
     </div>
   </div>
@@ -494,10 +519,10 @@
 
 <script>
 const zones = {
-  bakery:    { emoji:'🍞', name:'카페사장 민지', dept:'베이커리카페과', color:'#e8ac4c', floor:'cafe',    location:'📍 베이커리카페관 2층 · 카페 쁘티아티장', dialog:'"저 중학교 때 그냥 카페 알바나 할까 생각했거든요. 근데 여기 와서 레시피 개발하고 원가 계산 배우니까... 졸업하고 바로 카페 브랜드 취업했어요 😄"', mission:'음료 한 잔 직접 만들어보기', password:'1111' },
-  fashion:   { emoji:'👗', name:'디자이너 수빈', dept:'패션산업디자인과', color:'#e07c94', floor:'annex2', location:'📍 별관 2층 · 패션 VMD실', dialog:'"나이키 매장 취업했을 때 중학교 친구들이 제일 놀랐어요. 걔네 아직 대학 다니는데 저는 이미 2년차 직원이거든요. 이 옷 제가 직접 만든 거예요!"', mission:'선배 작품 비하인드 스토리 듣기', password:'1111' },
+  bakery:    { emoji:'🍞', name:'카페사장 민지', dept:'베이커리카페과', color:'#e8ac4c', floor:'annex6',  location:'📍 별관 6층 · Orange Lounge', dialog:'"저 중학교 때 그냥 카페 알바나 할까 생각했거든요. 근데 여기 와서 레시피 개발하고 원가 계산 배우니까... 졸업하고 바로 카페 브랜드 취업했어요 😄"', mission:'음료 한 잔 직접 만들어보기', password:'1111' },
+  fashion:   { emoji:'👗', name:'디자이너 수빈', dept:'패션산업디자인과', color:'#e07c94', floor:'annex4', location:'📍 별관 4층 · Green Lounge', dialog:'"나이키 매장 취업했을 때 중학교 친구들이 제일 놀랐어요. 걔네 아직 대학 다니는데 저는 이미 2년차 직원이거든요. 이 옷 제가 직접 만든 거예요!"', mission:'선배 작품 비하인드 스토리 듣기', password:'1111' },
   media:     { emoji:'💻', name:'개발자 현우', dept:'미디어소프트웨어과', color:'#79ade3', floor:'annex3', location:'📍 별관 3층 · 인공지능 실습실', dialog:'"병역특례로 IT 회사 다니고 있어요. 정보처리산업기사 스펙 넣었더니 면접관이 엄청 신기해했어요. 영상 편집 10분만 같이 해볼래요?"', mission:'영상 편집 or 코딩 10분 체험', password:'1111' },
-  consult:   { emoji:'💬', name:'입학상담 마법사', dept:'1순위 희망학과 상담', label:'COUNSELING', color:'#b48ce0', floor:null, location:'📍 각 학과 체험장소 · 학과 선생님', dialog:'"네 학과 중에 어디가 제일 끌렸나요? 가장 가고 싶은 학과 선생님과 1:1로 이야기 나눠봐요. 궁금한 건 뭐든 물어보세요!"', mission:'1순위 희망학과 선생님과 상담하기', password:'1111' },
+  consult:   { emoji:'💬', name:'입학상담 마법사', dept:'1순위 희망학과 상담', label:'COUNSELING', color:'#b48ce0', floor:'outdoor', location:'📍 야외 잔디밭 무대 · 가온누리 학과 부스', dialog:'"네 학과 중에 어디가 제일 끌렸나요? 가장 가고 싶은 학과 선생님과 1:1로 이야기 나눠봐요. 궁금한 건 뭐든 물어보세요!"', mission:'1순위 희망학과 선생님과 상담하기', password:'1111' },
   marketing: { emoji:'📊', name:'마케터 지호', dept:'마케팅경영과', color:'#68be92', floor:'main5',  location:'📍 본관 5층 · Blue Lounge', dialog:'"공기업 합격했을 때 담임 선생님한테 제일 먼저 전화했어요. 저 연봉 맞혀보실래요? 맞히면 취업 꿀팁 다 드림 😂"', mission:'선배 연봉 맞히기 도전 (힌트 3개)', password:'1111' }
 };
 
@@ -655,7 +680,7 @@ function closeTicket() {
   clearInterval(clockTimer);
 }
 
-const floorTabMap = { main5:0, annex4:1, annex3:2, annex2:3, cafe:4 };
+
 
 function init() {
   collected.forEach(k => applyStamp(k, false));
@@ -742,7 +767,7 @@ function applyStamp(key, animate) {
   const room = document.getElementById('room-' + key); if (room) room.classList.add('visited');
   if (animate) {
     const tabs = document.querySelectorAll('.tab');
-    if (z.floor) showFloor(z.floor, tabs[floorTabMap[z.floor]]);
+    if (z.floor) showFloor(z.floor, document.querySelector('.tab[data-floor="' + z.floor + '"]'));
     showToast(z.emoji + ' ' + z.dept + ' 마법 인장 획득! ✨', z.color, '#000');
   }
 }
