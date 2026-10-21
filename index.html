@@ -215,7 +215,7 @@
 <header style="position:relative">
   <div class="eyebrow">✦ HALLOWEEN QUEST 2026 ✦</div>
   <h1>근명 마법학교 탐험 지도</h1>
-  <div class="subtitle">네 학과의 선배 마법사를 찾아 마법 인장을 모아라</div>
+  <div class="subtitle">네 학과 체험 + 희망학과 상담, 마법 인장 5개를 모아라</div>
   <div class="flourish">🎃</div>
   <button class="reset-btn" onclick="resetStamps()">초기화</button>
 </header>
@@ -225,13 +225,14 @@
   <div class="stamp-item" id="s-bakery"><div class="stamp-icon">🍞</div><div>베이커리</div></div>
   <div class="stamp-item" id="s-fashion"><div class="stamp-icon">👗</div><div>패션</div></div>
   <div class="stamp-item" id="s-media"><div class="stamp-icon">💻</div><div>미디어</div></div>
+  <div class="stamp-item" id="s-consult" onclick="openModal('consult')" style="cursor:pointer"><div class="stamp-icon">💬</div><div>상담</div></div>
   <div class="divider"></div>
   <div class="stamp-item hunt-stamp" id="s-hunt" onclick="openHuntModal()" style="cursor:pointer;">
     <div class="stamp-icon" style="border-color:var(--gold);border-style:solid;font-size:13px">📸</div>
     <div style="color:var(--gold);font-size:10px;font-weight:700">사냥</div>
   </div>
   <div class="divider"></div>
-  <div class="stamp-total">스탬프 <span id="count">0</span>/4</div>
+  <div class="stamp-total">스탬프 <span id="count">0</span>/5</div>
 </div>
 
 <button class="player-chip" id="player-chip" onclick="openRegister(true)" style="display:none">
@@ -380,7 +381,7 @@
     <button class="modal-close" onclick="closeModalBtn()">✕</button>
     <div class="modal-bar" id="modal-bar"></div>
     <div class="modal-emoji" id="modal-emoji"></div>
-    <div class="modal-npc-label">SENIOR WIZARD</div>
+    <div class="modal-npc-label" id="modal-label">SENIOR WIZARD</div>
     <div class="modal-npc-name" id="modal-name"></div>
     <div class="modal-location" id="modal-location"></div>
     <div class="modal-dialog" id="modal-dialog"></div>
@@ -452,7 +453,7 @@
     <div class="modal-emoji">🪄</div>
     <div class="modal-npc-label">WIZARD REGISTRATION</div>
     <div class="modal-npc-name">마법사 등록</div>
-    <div class="modal-location" style="margin-bottom:16px">탐험을 시작하기 전에 이름을 남겨주세요.<br>마법 인장 4개를 모두 모으면 <strong style="color:var(--gold)">미션 완료 상품</strong>을 받을 수 있어요!</div>
+    <div class="modal-location" style="margin-bottom:16px">탐험을 시작하기 전에 이름을 남겨주세요.<br>마법 인장 5개(학과 체험 4 + 희망학과 상담 1)를 모두 모으면 <strong style="color:var(--gold)">미션 완료 상품</strong>을 받을 수 있어요!</div>
     <div class="reg-field">
       <label for="reg-name">이름</label>
       <input id="reg-name" type="text" maxlength="10" placeholder="예: 김민지" autocomplete="off" oninput="clearRegError()">
@@ -477,11 +478,11 @@
     <div class="ticket-card">
       <div class="ticket-name" id="t-name"></div>
       <div class="ticket-school" id="t-school"></div>
-      <div class="ticket-stamps">📊🍞👗💻</div>
+      <div class="ticket-stamps">📊🍞👗💻💬</div>
       <div class="ticket-meta">확인번호 <span class="ticket-code" id="t-code"></span><br>완성 시각 <span id="t-done"></span></div>
       <div class="ticket-clock" id="t-clock"></div>
     </div>
-    <div class="ticket-guide" id="t-guide">네 학과 선배 마법사를 모두 만났어요! 🎉<br>이 화면을 <strong style="color:var(--gold)">선생님께 보여주고 상품을 받아가세요!</strong></div>
+    <div class="ticket-guide" id="t-guide">네 학과 체험과 희망학과 상담까지 모두 마쳤어요! 🎉<br>이 화면을 <strong style="color:var(--gold)">선생님께 보여주고 상품을 받아가세요!</strong></div>
     <div class="ticket-claimed" id="t-claimed">✔ 상품 수령 완료</div>
     <button class="claim-btn" id="t-claim-btn" onclick="markClaimed()">🎁 상품 수령 완료</button>
     <button onclick="closeTicket()" style="margin-top:14px;width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">📜 지도로 돌아가기</button>
@@ -496,6 +497,7 @@ const zones = {
   bakery:    { emoji:'🍞', name:'카페사장 민지', dept:'베이커리카페과', color:'#e8ac4c', floor:'cafe',    location:'📍 베이커리카페관 2층 · 카페 쁘티아티장', dialog:'"저 중학교 때 그냥 카페 알바나 할까 생각했거든요. 근데 여기 와서 레시피 개발하고 원가 계산 배우니까... 졸업하고 바로 카페 브랜드 취업했어요 😄"', mission:'음료 한 잔 직접 만들어보기', password:'1111' },
   fashion:   { emoji:'👗', name:'디자이너 수빈', dept:'패션산업디자인과', color:'#e07c94', floor:'annex2', location:'📍 별관 2층 · 패션 VMD실', dialog:'"나이키 매장 취업했을 때 중학교 친구들이 제일 놀랐어요. 걔네 아직 대학 다니는데 저는 이미 2년차 직원이거든요. 이 옷 제가 직접 만든 거예요!"', mission:'선배 작품 비하인드 스토리 듣기', password:'1111' },
   media:     { emoji:'💻', name:'개발자 현우', dept:'미디어소프트웨어과', color:'#79ade3', floor:'annex3', location:'📍 별관 3층 · 인공지능 실습실', dialog:'"병역특례로 IT 회사 다니고 있어요. 정보처리산업기사 스펙 넣었더니 면접관이 엄청 신기해했어요. 영상 편집 10분만 같이 해볼래요?"', mission:'영상 편집 or 코딩 10분 체험', password:'1111' },
+  consult:   { emoji:'💬', name:'입학상담 마법사', dept:'1순위 희망학과 상담', label:'COUNSELING', color:'#b48ce0', floor:null, location:'📍 각 학과 체험장소 · 학과 선생님', dialog:'"네 학과 중에 어디가 제일 끌렸나요? 가장 가고 싶은 학과 선생님과 1:1로 이야기 나눠봐요. 궁금한 건 뭐든 물어보세요!"', mission:'1순위 희망학과 선생님과 상담하기', password:'1111' },
   marketing: { emoji:'📊', name:'마케터 지호', dept:'마케팅경영과', color:'#68be92', floor:'main5',  location:'📍 본관 5층 · Blue Lounge', dialog:'"공기업 합격했을 때 담임 선생님한테 제일 먼저 전화했어요. 저 연봉 맞혀보실래요? 맞히면 취업 꿀팁 다 드림 😂"', mission:'선배 연봉 맞히기 도전 (힌트 3개)', password:'1111' }
 };
 
@@ -516,6 +518,7 @@ function clearStamps() {
   try { sessionStorage.removeItem('stamps'); } catch (e) {}
 }
 const collected = new Set(loadStamps().filter(k => zones[k]));
+const TOTAL = Object.keys(zones).length;
 let current = null;
 
 /* ----- 마법사(학생) 정보 ----- */
@@ -529,7 +532,7 @@ function loadPlayer() {
 }
 /* ----- 구글 시트 연동 ----- */
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyKmG6x4EzepDlNOH41WKm78bZ5SVe_-cmAcEiTf6vAEi6qrQ00R88nXPAPa6iqQVz5Zw/exec'; // Apps Script 웹 앱 URL (비어 있으면 전송 안 함)
-const STAMP_NAMES = { marketing:'마케팅', bakery:'베이커리', fashion:'패션', media:'미디어' };
+const STAMP_NAMES = { marketing:'마케팅', bakery:'베이커리', fashion:'패션', media:'미디어', consult:'상담' };
 function syncSheet(event) {
   if (!SHEET_URL || !player) return;
   if (!player.id) { player.id = 'D' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); savePlayerLocal(); }
@@ -567,10 +570,10 @@ function renderPlayer() {
   document.getElementById('pc-name').textContent = player.name;
   document.getElementById('pc-school').textContent = '· ' + player.school;
   chip.style.display = 'flex';
-  chip.classList.toggle('locked', collected.size === 4);
+  chip.classList.toggle('locked', collected.size === TOTAL);
 }
 function openRegister(editing) {
-  if (editing && collected.size === 4) { openTicket(); return; }
+  if (editing && collected.size === TOTAL) { openTicket(); return; }
   document.getElementById('reg-name').value = player ? player.name : '';
   document.getElementById('reg-school').value = player ? player.school : '';
   document.getElementById('reg-close').style.display = player ? 'flex' : 'none';
@@ -593,12 +596,12 @@ function submitRegister() {
   const isNew = !player;
   player = Object.assign({}, player || {}, { name, school: normSchool(schoolRaw) });
   if (!player.createdAt) player.createdAt = Date.now();
-  if (collected.size === 4 && !player.completedAt) player.completedAt = Date.now();
+  if (collected.size === TOTAL && !player.completedAt) player.completedAt = Date.now();
   savePlayer(isNew ? '등록' : '정보수정');
   renderPlayer();
   document.getElementById('reg-overlay').classList.remove('open');
   showToast(isNew ? '🪄 ' + player.name + ' 마법사, 탐험을 시작하세요!' : '✦ 정보가 수정됐어요', '#2c2218', '#d4af6a');
-  if (collected.size === 4) setTimeout(openTicket, 600);
+  if (collected.size === TOTAL) setTimeout(openTicket, 600);
 }
 
 /* ----- 미션 완료 상품 ----- */
@@ -618,7 +621,7 @@ function fmtTime(t) {
   return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
 }
 function openTicket() {
-  if (collected.size !== 4) return;
+  if (collected.size !== TOTAL) return;
   if (!player) { openRegister(false); return; }
   if (!player.completedAt) { player.completedAt = Date.now(); savePlayer('미션완료'); }
   document.getElementById('t-name').textContent = player.name;
@@ -656,7 +659,7 @@ const floorTabMap = { main5:0, annex4:1, annex3:2, annex2:3, cafe:4 };
 
 function init() {
   collected.forEach(k => applyStamp(k, false));
-  if (collected.size === 4) document.getElementById('complete-banner').classList.add('show');
+  if (collected.size === TOTAL) document.getElementById('complete-banner').classList.add('show');
   saveStamps();
   renderPlayer();
   if (!player) openRegister(false);
@@ -680,6 +683,7 @@ function showFloor(id, btn) {
 function openModal(key) {
   const z = zones[key]; current = key;
   document.getElementById('modal-emoji').textContent = z.emoji;
+  document.getElementById('modal-label').textContent = z.label || 'SENIOR WIZARD';
   document.getElementById('modal-name').textContent = z.name + ' · ' + z.dept;
   document.getElementById('modal-location').textContent = z.location;
   document.getElementById('modal-bar').style.background = z.color;
@@ -721,9 +725,9 @@ function collectStamp(key) {
   collected.add(k); current = k;
   saveStamps();
   applyStamp(k, true);
-  if (collected.size === 4 && player && !player.completedAt) { player.completedAt = Date.now(); savePlayerLocal(); }
-  syncSheet(collected.size === 4 ? '미션완료' : '인장');
-  if (collected.size === 4) {
+  if (collected.size === TOTAL && player && !player.completedAt) { player.completedAt = Date.now(); savePlayerLocal(); }
+  syncSheet(collected.size === TOTAL ? '미션완료' : '인장');
+  if (collected.size === TOTAL) {
     renderPlayer();
     setTimeout(() => document.getElementById('complete-banner').classList.add('show'), 800);
     setTimeout(() => { closeModalBtn(); openTicket(); }, 1600);
@@ -734,11 +738,11 @@ function applyStamp(key, animate) {
   const z = zones[key];
   document.getElementById('s-' + key).classList.add('collected');
   document.getElementById('count').textContent = collected.size;
-  document.getElementById('badge-' + key).textContent = '✔ 인장';
-  document.getElementById('room-' + key).classList.add('visited');
+  const badge = document.getElementById('badge-' + key); if (badge) badge.textContent = '✔ 인장';
+  const room = document.getElementById('room-' + key); if (room) room.classList.add('visited');
   if (animate) {
     const tabs = document.querySelectorAll('.tab');
-    showFloor(z.floor, tabs[floorTabMap[z.floor]]);
+    if (z.floor) showFloor(z.floor, tabs[floorTabMap[z.floor]]);
     showToast(z.emoji + ' ' + z.dept + ' 마법 인장 획득! ✨', z.color, '#000');
   }
 }
