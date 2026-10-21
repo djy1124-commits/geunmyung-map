@@ -463,7 +463,7 @@
     </div>
     <div class="reg-error" id="reg-error"></div>
     <button class="reg-btn" onclick="submitRegister()">✦ 탐험 시작하기</button>
-    <div class="reg-note">상품 수령 확인에만 쓰이며, 이 정보는 내 휴대폰에만 저장돼요.</div>
+    <div class="reg-note">입력한 정보는 미션 확인과 상품 지급을 위해 근명고 입학홍보부에서만 사용해요.</div>
   </div>
 </div>
 
@@ -527,7 +527,28 @@ function loadPlayer() {
     return (p && p.name && p.school) ? p : null;
   } catch (e) { return null; }
 }
-function savePlayer() {
+/* ----- 구글 시트 연동 ----- */
+const SHEET_URL = ''; // Apps Script 웹 앱 URL (비어 있으면 전송 안 함)
+const STAMP_NAMES = { marketing:'마케팅', bakery:'베이커리', fashion:'패션', media:'미디어' };
+function syncSheet(event) {
+  if (!SHEET_URL || !player) return;
+  if (!player.id) { player.id = 'D' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); savePlayerLocal(); }
+  const data = {
+    event, id: player.id, name: player.name, school: player.school,
+    stamps: Object.keys(STAMP_NAMES).filter(k => collected.has(k)).map(k => STAMP_NAMES[k]).join(', '),
+    count: collected.size,
+    createdAt: player.createdAt || '', completedAt: player.completedAt || '',
+    code: player.completedAt ? ticketCode(player) : '', claimedAt: player.claimedAt || ''
+  };
+  try {
+    fetch(SHEET_URL, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(data) }).catch(() => {});
+  } catch (e) {}
+}
+function savePlayer(event) {
+  savePlayerLocal();
+  if (event) syncSheet(event);
+}
+function savePlayerLocal() {
   const v = JSON.stringify(player);
   try { localStorage.setItem(PLAYER_KEY, v); } catch (e) {}
   try { sessionStorage.setItem(PLAYER_KEY, v); } catch (e) {}
@@ -572,7 +593,8 @@ function submitRegister() {
   const isNew = !player;
   player = Object.assign({}, player || {}, { name, school: normSchool(schoolRaw) });
   if (!player.createdAt) player.createdAt = Date.now();
-  savePlayer();
+  if (collected.size === 4 && !player.completedAt) player.completedAt = Date.now();
+  savePlayer(isNew ? '등록' : '정보수정');
   renderPlayer();
   document.getElementById('reg-overlay').classList.remove('open');
   showToast(isNew ? '🪄 ' + player.name + ' 마법사, 탐험을 시작하세요!' : '✦ 정보가 수정됐어요', '#2c2218', '#d4af6a');
@@ -598,7 +620,7 @@ function fmtTime(t) {
 function openTicket() {
   if (collected.size !== 4) return;
   if (!player) { openRegister(false); return; }
-  if (!player.completedAt) { player.completedAt = Date.now(); savePlayer(); }
+  if (!player.completedAt) { player.completedAt = Date.now(); savePlayer('미션완료'); }
   document.getElementById('t-name').textContent = player.name;
   document.getElementById('t-school').textContent = player.school;
   document.getElementById('t-code').textContent = ticketCode(player);
@@ -622,7 +644,7 @@ function renderClaim() {
 function markClaimed() {
   if (player.claimedAt) return;
   if (!confirm('상품을 받았나요?\n수령 완료로 처리하면 취소할 수 없어요.')) return;
-  player.claimedAt = Date.now(); savePlayer(); renderClaim();
+  player.claimedAt = Date.now(); savePlayer('상품수령'); renderClaim();
   showToast('🎁 상품 수령 완료!', '#10b981', '#000');
 }
 function closeTicket() {
@@ -699,8 +721,9 @@ function collectStamp(key) {
   collected.add(k); current = k;
   saveStamps();
   applyStamp(k, true);
+  if (collected.size === 4 && player && !player.completedAt) { player.completedAt = Date.now(); savePlayerLocal(); }
+  syncSheet(collected.size === 4 ? '미션완료' : '인장');
   if (collected.size === 4) {
-    if (player && !player.completedAt) { player.completedAt = Date.now(); savePlayer(); }
     renderPlayer();
     setTimeout(() => document.getElementById('complete-banner').classList.add('show'), 800);
     setTimeout(() => { closeModalBtn(); openTicket(); }, 1600);
