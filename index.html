@@ -7,6 +7,12 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Cinzel:wght@500;700&family=Noto+Sans+KR:wght@400;700;900&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
+  body { word-break:keep-all; overflow-wrap:break-word; }
+  .room-row { flex-wrap:wrap; }
+  .room { min-width:64px; }
+  .room.npc-room { min-width:150px; }
+  .room.narrow { min-width:24px; max-width:64px; padding-left:3px !important; padding-right:3px !important; align-items:center; }
+  .room.narrow .room-name { white-space:nowrap; font-size:9px; }
   :root {
     --bg:#0b0d1a; --ink:#140f0a; --gold:#d4af6a; --gold-soft:rgba(212,175,106,.35); --gold-faint:rgba(212,175,106,.14);
     --accent:#b8894a; --accent2:#e9cf94;
@@ -94,7 +100,7 @@
   .room.visited { background:color-mix(in srgb,var(--rc) 24%,#1c150e) !important; }
 
   .npc-tag { font-size:11px; font-weight:700; margin-top:3px; color:var(--rc); }
-  .npc-badge { position:absolute; top:5px; right:5px; font-size:9px; padding:1px 6px; border-radius:6px; background:rgba(212,175,106,.12); color:var(--gold); border:1px solid var(--gold-faint); }
+  .npc-badge { position:static; align-self:flex-start; margin-bottom:4px; white-space:nowrap; font-size:9px; padding:1px 6px; border-radius:6px; background:rgba(212,175,106,.12); color:var(--gold); border:1px solid var(--gold-faint); }
   .visited .npc-badge { background:var(--gold); color:#1a120a; font-weight:700; }
 
   .pulse-dot { display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:4px; background:var(--rc); box-shadow:0 0 8px var(--rc); animation:pdot 1.6s ease-in-out infinite; }
@@ -139,7 +145,7 @@
   @keyframes huntpulse { 0%,100%{box-shadow:0 0 0 0 rgba(212,175,106,.45)} 50%{box-shadow:0 0 0 8px rgba(212,175,106,0)} }
   .reset-btn { position:absolute; top:12px; right:16px; z-index:2; background:rgba(20,14,10,.6) !important; font-size:10px; color:var(--muted); background:none; border:1px solid var(--gold-faint); border-radius:6px; padding:3px 10px; cursor:pointer; font-family:var(--serif); transition:all .2s; }
   .reset-btn:hover { color:#e07c7c; border-color:#e07c7c; }
-  @media (max-width:420px){ .room-name{font-size:10px} .room{padding:7px 7px} }
+  @media (max-width:420px){ .room-name{font-size:10px} .room{padding:7px 7px} header{padding-top:46px !important} h1{font-size:25px !important;letter-spacing:0} .reset-btn{top:10px} .eyebrow{letter-spacing:3px} }
 
   /* ===== Night theme ===== */
   body { background:radial-gradient(ellipse at 50% -10%, #3a2350 0%, #1a1230 40%, #0a0812 100%) fixed !important; }
