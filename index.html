@@ -83,6 +83,9 @@
   .room.bakery-r  { --rc:var(--bakery); }
   .room.fashion-r { --rc:var(--fashion); }
   .room.consult-r { --rc:#b48ce0; }
+  .room.event-room { flex:1.4; cursor:default; border-color:color-mix(in srgb,var(--ev) 60%,transparent); background:color-mix(in srgb,var(--ev) 14%,#1c150e); }
+  .room.event-room .room-name { color:var(--ev) !important; font-weight:700; }
+  .ev-tag { font-size:9px; font-weight:700; color:var(--ev); margin-bottom:2px; white-space:nowrap; }
   .room.media-r   { --rc:var(--media); }
   .room.marketing-r { --rc:var(--marketing); }
   .room.npc-room { border-color:color-mix(in srgb,var(--rc) 55%,transparent); background:color-mix(in srgb,var(--rc) 12%,#1c150e); box-shadow:0 0 16px color-mix(in srgb,var(--rc) 18%,transparent); }
@@ -291,9 +294,9 @@
       </div>
       <div class="corridor">복도</div>
       <div class="room-row">
-        <div class="room narrow"><div class="room-name">1-7</div></div>
+        <div class="room event-room" style="--ev:#e07c94"><div class="ev-tag">📸 포토존</div><div class="room-name">1-7</div></div>
         <div class="room narrow"><div class="room-name">1-6</div></div>
-        <div class="room narrow"><div class="room-name">1-5</div></div>
+        <div class="room event-room" style="--ev:#a855f7"><div class="ev-tag">👻 귀신의집</div><div class="room-name">1-5</div></div>
         <div class="room narrow"><div class="room-name">1-4</div></div>
         <div class="room narrow"><div class="room-name">1-3</div></div>
         <div class="room narrow"><div class="room-name">1-2</div></div>
