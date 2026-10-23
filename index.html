@@ -207,6 +207,9 @@
   .ticket-clock::before { content:'● '; animation:blink2 1s steps(2) infinite; }
   @keyframes blink2 { 50%{opacity:0} }
   .ticket-guide { font-size:13px; color:var(--text); line-height:1.7; }
+  .pickup { margin:12px 0; padding:14px; border-radius:12px; background:linear-gradient(180deg,#f0d28e,#b5853f); color:#1a120a; box-shadow:0 0 24px rgba(233,190,110,.45); }
+  .pickup-label { font-size:13px; font-weight:700; letter-spacing:1px; }
+  .pickup-place { font-size:22px; font-weight:900; font-family:'Noto Sans KR',sans-serif; margin-top:2px; }
   .ticket-claimed { display:none; margin-top:10px; padding:12px; border-radius:10px; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.5); color:#10b981; font-size:16px; font-weight:900; font-family:'Noto Sans KR',sans-serif; }
   .claim-btn { margin-top:12px; width:100%; padding:12px; border-radius:10px; border:1px solid #10b981; background:rgba(16,185,129,.15); color:#10b981; font-size:15px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR',sans-serif; }
   .ticket.claimed .ticket-card { border-color:#10b981; }
@@ -471,7 +474,9 @@
       <div class="ticket-meta">확인번호 <span class="ticket-code" id="t-code"></span><br>완성 시각 <span id="t-done"></span></div>
       <div class="ticket-clock" id="t-clock"></div>
     </div>
-    <div class="ticket-guide" id="t-guide">네 학과 체험과 희망학과 상담까지 모두 마쳤어요! 🎉<br>이 화면을 <strong style="color:var(--gold)">선생님께 보여주고 상품을 받아가세요!</strong></div>
+    <div class="ticket-guide" id="t-guide">네 학과 체험과 희망학과 상담까지 모두 마쳤어요! 🎉
+      <div class="pickup"><div class="pickup-label">🎁 선물 수령 장소</div><div class="pickup-place">본관 출입구 외부 우측</div></div>
+      이 화면을 <strong style="color:var(--gold)">선생님께 보여주고 선물을 받아가세요!</strong></div>
     <div class="ticket-claimed" id="t-claimed">✔ 상품 수령 완료</div>
     <button class="claim-btn" id="t-claim-btn" onclick="markClaimed()">🎁 상품 수령 완료</button>
     <button onclick="closeTicket()" style="margin-top:14px;width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">📜 지도로 돌아가기</button>
@@ -479,7 +484,7 @@
 </div>
 
 <div class="stamp-toast" id="toast"></div>
-<div class="complete-banner" id="complete-banner" onclick="openTicket()">✨ 미션 완료! 눌러서 상품 받기 🎁</div>
+<div class="complete-banner" id="complete-banner" onclick="openTicket()">✨ 미션 완료! 선물은 본관 출입구 외부 우측 🎁</div>
 
 <script>
 const zones = {
