@@ -233,7 +233,7 @@
   <div class="divider"></div>
   <div class="stamp-item hunt-stamp" id="s-hunt" onclick="openHuntModal()" style="cursor:pointer;">
     <div class="stamp-icon" style="border-color:var(--gold);border-style:solid;font-size:13px">📸</div>
-    <div style="color:var(--gold);font-size:10px;font-weight:700">사냥</div>
+    <div style="color:var(--gold);font-size:10px;font-weight:700">포토존</div>
   </div>
   <div class="divider"></div>
   <div class="stamp-total">스탬프 <span id="count">0</span>/5</div>
@@ -294,7 +294,7 @@
       </div>
       <div class="corridor">복도</div>
       <div class="room-row">
-        <div class="room event-room" style="--ev:#e07c94"><div class="ev-tag">📸 포토존</div><div class="room-name">1-7</div></div>
+        <div class="room event-room" style="--ev:#e07c94;cursor:pointer" onclick="openHuntModal()"><div class="ev-tag">📸 포토존</div><div class="room-name">1-7</div></div>
         <div class="room narrow"><div class="room-name">1-6</div></div>
         <div class="room event-room" style="--ev:#a855f7"><div class="ev-tag">👻 귀신의집</div><div class="room-name">1-5</div></div>
         <div class="room narrow"><div class="room-name">1-4</div></div>
@@ -401,20 +401,20 @@
     <div class="modal-bar" style="background:linear-gradient(135deg,#a855f7,#ec4899)"></div>
     <div class="modal-emoji">📸</div>
     <div class="modal-npc-label">BONUS EVENT</div>
-    <div class="modal-npc-name" style="background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent">🦖 티라노사우루스 사냥</div>
+    <div class="modal-npc-name" style="background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent">📸 포토존 인증 이벤트</div>
     <div class="modal-dialog" style="border-color:#a855f7;margin-bottom:16px">
-      지금 근명고 어딘가를 돌아다니고 있는 <strong style="color:#a855f7">티라노사우루스</strong>를 찾아라! 🦕<br><br>
-      티라노와 함께 사진을 찍고 인스타그램에 올려주세요.<br>
+      <strong style="color:#a855f7">본관 5층 1-7반 포토존</strong>에서 친구들과 할로윈 인생샷을 찍어보세요! 🎃<br><br>
+      찍은 사진을 인스타그램에 올려주세요.<br>
       학교설명회가 끝나면 <strong style="color:#ec4899">홍보부 선생님</strong>을 찾아오세요. 선물이 기다리고 있어요! 🎁
     </div>
 
     <div style="background:rgba(168,85,247,.08);border-radius:12px;padding:14px;margin-bottom:16px;">
       <div style="font-size:11px;color:#a855f7;font-weight:700;margin-bottom:10px;letter-spacing:1px">📋 참여 방법</div>
       <div style="font-size:13px;color:var(--text);line-height:2;">
-        1️⃣ 티라노사우루스 발견 → 함께 사진 찍기<br>
+        1️⃣ 본관 5층 1-7반 포토존에서 사진 찍기<br>
         2️⃣ 인스타그램 게시물 또는 스토리에 업로드<br>
         3️⃣ <strong style="color:#ec4899">@km_highschool 계정 태그</strong> 필수<br>
-        4️⃣ <strong style="color:#06b6d4">#근명학교설명회 #티라노사냥</strong> 해시태그 추가<br>
+        4️⃣ <strong style="color:#06b6d4">#근명학교설명회 #근명포토존</strong> 해시태그 추가<br>
         5️⃣ 학교설명회 마치고 <strong style="color:#a855f7">홍보부 선생님</strong> 찾아오기 🎁
       </div>
     </div>
@@ -428,7 +428,7 @@
       <span style="font-size:20px">📸</span> 인스타그램 열기 @km_highschool
     </a>
     <div style="margin-top:14px;padding:10px 14px;background:rgba(168,85,247,.08);border-radius:10px;font-size:11px;color:#a855f7;line-height:1.6;">
-      🦖 티라노사우루스는 지금 이 순간에도 근명고 어딘가를 돌아다니고 있습니다. 눈을 크게 뜨고 찾아보세요!
+      👻 같은 층 1-5반에는 귀신의집도 있어요. 용기 있는 마법사라면 도전해 보세요!
     </div>
     <button onclick="document.getElementById('hunt-overlay').classList.remove('open')" style="margin-top:12px;width:100%;padding:11px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;">📜 지도로 돌아가기</button>
   </div>
