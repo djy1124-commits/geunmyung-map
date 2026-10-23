@@ -527,20 +527,53 @@ function loadPlayer() {
 /* ----- 구글 시트 연동 ----- */
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyKmG6x4EzepDlNOH41WKm78bZ5SVe_-cmAcEiTf6vAEi6qrQ00R88nXPAPa6iqQVz5Zw/exec'; // Apps Script 웹 앱 URL (비어 있으면 전송 안 함)
 const STAMP_NAMES = { marketing:'마케팅', bakery:'베이커리', fashion:'패션', media:'미디어', consult:'상담' };
+const OUTBOX_KEY = 'gm_outbox_2026';
+const SEND_EVENTS = { '등록':1, '정보수정':1, '미션완료':1, '상품수령':1 };
+let flushing = false;
+function loadOutbox() { try { const a = JSON.parse(localStorage.getItem(OUTBOX_KEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+function saveOutbox(a) { try { localStorage.setItem(OUTBOX_KEY, JSON.stringify(a)); } catch (e) {} }
 function syncSheet(event) {
-  if (!SHEET_URL || !player) return;
+  if (!SHEET_URL || !player || !SEND_EVENTS[event]) return;
   if (!player.id) { player.id = 'D' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); savePlayerLocal(); }
   const data = {
     event, id: player.id, name: player.name, school: player.school,
     stamps: Object.keys(STAMP_NAMES).filter(k => collected.has(k)).map(k => STAMP_NAMES[k]).join(', '),
     count: collected.size,
     createdAt: player.createdAt || '', completedAt: player.completedAt || '',
-    code: player.completedAt ? ticketCode(player) : '', claimedAt: player.claimedAt || ''
+    code: player.completedAt ? ticketCode(player) : '', claimedAt: player.claimedAt || '', at: Date.now()
   };
-  try {
-    fetch(SHEET_URL, { method:'POST', mode:'no-cors', keepalive:true, headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(data) }).catch(() => {});
-  } catch (e) {}
+  const box = loadOutbox().filter(x => x.event !== event);
+  box.push(data); saveOutbox(box);
+  setTimeout(flushOutbox, 300 + Math.random() * 2500);
 }
+async function flushOutbox() {
+  if (!SHEET_URL || flushing) return;
+  let box = loadOutbox(); if (!box.length) return;
+  flushing = true;
+  try {
+    for (const item of box.slice()) {
+      // 최신 진행 상태를 함께 실어 보냄
+      if (player && item.id === player.id) {
+        item.stamps = Object.keys(STAMP_NAMES).filter(k => collected.has(k)).map(k => STAMP_NAMES[k]).join(', ');
+        item.count = collected.size; item.completedAt = player.completedAt || item.completedAt;
+        item.code = player.completedAt ? ticketCode(player) : item.code; item.claimedAt = player.claimedAt || item.claimedAt;
+      }
+      let ok = false;
+      try {
+        const res = await fetch(SHEET_URL, { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(item) });
+        ok = res.ok && (await res.text()).trim() === 'ok';
+      } catch (e) { ok = false; }
+      if (!ok) {
+        item.tries = (item.tries || 0) + 1;
+        box = loadOutbox().map(x => (x.event === item.event && x.at === item.at) ? Object.assign(x, { tries: item.tries }) : x).filter(x => (x.tries || 0) < 8);
+        saveOutbox(box); break;
+      }
+      box = loadOutbox().filter(x => !(x.event === item.event && x.at === item.at)); saveOutbox(box);
+    }
+  } finally { flushing = false; }
+}
+setInterval(() => { if (loadOutbox().length) flushOutbox(); }, 20000 + Math.random() * 10000);
+window.addEventListener('online', () => flushOutbox());
 function savePlayer(event) {
   savePlayerLocal();
   if (event) syncSheet(event);
@@ -720,7 +753,7 @@ function collectStamp(key) {
   saveStamps();
   applyStamp(k, true);
   if (collected.size === TOTAL && player && !player.completedAt) { player.completedAt = Date.now(); savePlayerLocal(); }
-  syncSheet(collected.size === TOTAL ? '미션완료' : '인장');
+  if (collected.size === TOTAL) syncSheet('미션완료');
   if (collected.size === TOTAL) {
     renderPlayer();
     setTimeout(() => document.getElementById('complete-banner').classList.add('show'), 800);
@@ -767,6 +800,7 @@ function closeHuntModal(e) {
   if (e.target === document.getElementById('hunt-overlay')) document.getElementById('hunt-overlay').classList.remove('open');
 }
 init();
+setTimeout(flushOutbox, 1500 + Math.random() * 3000);
 </script>
 </body>
 </html>
